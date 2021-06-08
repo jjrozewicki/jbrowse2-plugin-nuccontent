@@ -1,0 +1,54 @@
+{
+  "name": "jbrowse2-plugin-nuccontent",
+  "version": "1.0.3",
+  "description": "JBrowse 2 statistics sequence adapter",
+  "keywords": [
+    "jbrowse",
+    "jbrowse2"
+  ],
+  "license": "Apache-2.0",
+  "bugs": "https://github.com/GMOD/jbrowse-components/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GMOD/jbrowse-components.git"
+  },
+  "author": "John Rozewicki",
+  "distMain": "dist/index.js",
+  "srcMain": "src/index.ts",
+  "main": "src/index.ts",
+  "module": "",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "start": "tsdx watch --verbose --noClean",
+    "build": "tsdx build --format cjs,esm,umd --name JBrowsePluginNucContent"
+  },
+  "devDependencies": {
+    "tsdx": "^0.14.1"
+  },
+  "dependencies": {
+    "@gmod/indexedfasta": "^1.0.13",
+    "@gmod/twobit": "^1.1.10",
+    "@jbrowse/cli": "^1.1.0",
+    "@jbrowse/core": "^1.0.3",
+    "@jbrowse/development-tools": "^1.0.3",
+    "@jbrowse/plugin-linear-genome-view": "^1.0.3",
+    "@jbrowse/plugin-wiggle": "^1.0.3",
+    "@material-ui/core": "^4.9.13",
+    "abortable-promise-cache": "^1.3.0",
+    "clsx": "^1.1.0",
+    "generic-filehandle": "^2.0.1",
+    "mobx-react": "^6.0.0",
+    "mobx-state-tree": "3.14.1",
+    "prop-types": "^15.0.0",
+    "react": "^16.8.0",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-globals": "^1.4.0",
+    "rxjs": "^6.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

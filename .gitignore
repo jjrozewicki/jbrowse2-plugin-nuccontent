@@ -1,0 +1,6 @@
+.bash_history
+.viminfo
+work/*
+**/node_modules
+__pycache__
+/web_test/*
