@@ -4,3 +4,4 @@ work/*
 **/node_modules
 __pycache__
 /web_test/*
+/sample_config/S_lycopersicum_chromosomes*

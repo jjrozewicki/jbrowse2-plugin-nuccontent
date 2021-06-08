@@ -14,13 +14,13 @@
         "adapter": {
           "type": "BgzipFastaAdapter",
           "faiLocation": {
-            "uri": "https://s3.amazonaws.com/jbrowse.org/genomes/tomato/SL4.0/S_lycopersicum_chromosomes.4.00.fa.gz.fai"
+            "uri": "./sample_config/S_lycopersicum_chromosomes.4.00.fa.gz.fai"
           },
           "fastaLocation": {
-            "uri": "https://s3.amazonaws.com/jbrowse.org/genomes/tomato/SL4.0/S_lycopersicum_chromosomes.4.00.fa.gz"
+            "uri": "./sample_config/S_lycopersicum_chromosomes.4.00.fa.gz"
           },
           "gziLocation": {
-            "uri": "https://s3.amazonaws.com/jbrowse.org/genomes/tomato/SL4.0/S_lycopersicum_chromosomes.4.00.fa.gz.gzi"
+            "uri": "./sample_config/S_lycopersicum_chromosomes.4.00.fa.gz.gzi"
           }
         }
       }
@@ -30,7 +30,7 @@
     {
       "name": "GC Content (Dynamic)",
       "trackId": "gc_content_dynamic",
-      "type": "QuantitativeTrack",
+      "type": "NucContentTrack",
       "assemblyNames": [
         "SL4.0"
       ],
@@ -38,13 +38,13 @@
         "sequenceAdapter": {
           "type": "BgzipFastaAdapter",
           "faiLocation": {
-            "uri": "https://s3.amazonaws.com/jbrowse.org/genomes/tomato/SL4.0/S_lycopersicum_chromosomes.4.00.fa.gz.fai"
+            "uri": "./sample_config/S_lycopersicum_chromosomes.4.00.fa.gz.fai"
           },
           "fastaLocation": {
-            "uri": "https://s3.amazonaws.com/jbrowse.org/genomes/tomato/SL4.0/S_lycopersicum_chromosomes.4.00.fa.gz"
+            "uri": "./sample_config/S_lycopersicum_chromosomes.4.00.fa.gz"
           },
           "gziLocation": {
-            "uri": "https://s3.amazonaws.com/jbrowse.org/genomes/tomato/SL4.0/S_lycopersicum_chromosomes.4.00.fa.gz.gzi"
+            "uri": "./sample_config/S_lycopersicum_chromosomes.4.00.fa.gz.gzi"
           }
         },
         "type": "NucContentAdapter",
@@ -80,7 +80,7 @@
       ],
       "adapter": {
         "bigWigLocation": {
-          "uri": "S_lycopersicum_chromosomes.4.00.bw"
+          "uri": "./sample_config/S_lycopersicum_chromosomes.4.00.bw"
         },
         "type": "BigWigAdapter"
       },

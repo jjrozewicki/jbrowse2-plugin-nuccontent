@@ -1,6 +1,12 @@
 import AdapterType from '@jbrowse/core/pluggableElementTypes/AdapterType'
+import TrackType from '@jbrowse/core/pluggableElementTypes/TrackType'
 import Plugin from '@jbrowse/core/Plugin'
 import PluginManager from '@jbrowse/core/PluginManager'
+import {
+  createBaseTrackConfig,
+  createBaseTrackModel,
+} from '@jbrowse/core/pluggableElementTypes/models'
+import { ConfigurationSchema } from '@jbrowse/core/configuration'
 
 import NucContentAdapter from './NucContentAdapter'
 import {
@@ -12,6 +18,23 @@ export default class NucContentPlugin extends Plugin {
   name = 'NucContentPlugin'
 
   install(pluginManager: PluginManager) {
+    pluginManager.addTrackType(() => {
+      const configSchema = ConfigurationSchema(
+        'NucContentTrack',
+        {},
+        { baseConfiguration: createBaseTrackConfig(pluginManager) },
+      )
+      return new TrackType({
+        name: 'NucContentTrack',
+        configSchema,
+        stateModel: createBaseTrackModel(
+          pluginManager,
+          'NucContentTrack',
+          configSchema,
+        ),
+      })
+    })
+
     pluginManager.addAdapterType(
       () =>
         new AdapterType({
