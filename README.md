@@ -24,3 +24,12 @@ Bug reports and issues for this plugin can be submitted via this Github reposito
 
 Pull requests that include documentation of improvements/fixes will be considered, but may not be immediately accepted.
 
+## Development
+
+Dependencies for this project can be downloaded through `yarn`:
+
+* `npx yarn`
+
+This project can be built with the command
+
+* `npx yarn build`

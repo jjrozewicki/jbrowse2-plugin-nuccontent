@@ -1,0 +1,111 @@
+{
+  "plugins": [
+    {
+      "name": "NucContent",
+      "url": "dist/jbrowsepluginnuccontent.umd.development.js"
+    }
+  ],
+  "assemblies": [
+    {
+      "name": "SL4.0",
+      "sequence": {
+        "trackId": "tomato",
+        "type": "ReferenceSequenceTrack",
+        "adapter": {
+          "type": "BgzipFastaAdapter",
+          "faiLocation": {
+            "uri": "https://s3.amazonaws.com/jbrowse.org/genomes/tomato/SL4.0/S_lycopersicum_chromosomes.4.00.fa.gz.fai"
+          },
+          "fastaLocation": {
+            "uri": "https://s3.amazonaws.com/jbrowse.org/genomes/tomato/SL4.0/S_lycopersicum_chromosomes.4.00.fa.gz"
+          },
+          "gziLocation": {
+            "uri": "https://s3.amazonaws.com/jbrowse.org/genomes/tomato/SL4.0/S_lycopersicum_chromosomes.4.00.fa.gz.gzi"
+          }
+        }
+      }
+    }
+  ],
+  "tracks": [
+    {
+      "name": "GC Content (Dynamic)",
+      "trackId": "gc_content_dynamic",
+      "type": "QuantitativeTrack",
+      "assemblyNames": [
+        "SL4.0"
+      ],
+      "adapter": {
+        "sequenceAdapter": {
+          "type": "BgzipFastaAdapter",
+          "faiLocation": {
+            "uri": "https://s3.amazonaws.com/jbrowse.org/genomes/tomato/SL4.0/S_lycopersicum_chromosomes.4.00.fa.gz.fai"
+          },
+          "fastaLocation": {
+            "uri": "https://s3.amazonaws.com/jbrowse.org/genomes/tomato/SL4.0/S_lycopersicum_chromosomes.4.00.fa.gz"
+          },
+          "gziLocation": {
+            "uri": "https://s3.amazonaws.com/jbrowse.org/genomes/tomato/SL4.0/S_lycopersicum_chromosomes.4.00.fa.gz.gzi"
+          }
+        },
+        "type": "NucContentAdapter",
+        "windowDelta": 10000,
+        "windowSize": 10000
+      },
+      "displays": [
+        {
+          "displayId": "gc_content_dynamic-NucContentDisplay",
+          "maxScore": 0.7,
+          "minScore": 0.3,
+          "renderers": {
+            "DensityRenderer": {
+              "type": "DensityRenderer"
+            },
+            "LinePlotRenderer": {
+              "type": "LinePlotRenderer"
+            },
+            "XYPlotRenderer": {
+              "type": "XYPlotRenderer"
+            }
+          },
+          "type": "NucContentDisplay"
+        }
+      ]
+    },
+    {
+      "name": "GC Content (10kb)",
+      "trackId": "gc_sfasciatum_10k",
+      "type": "QuantitativeTrack",
+      "assemblyNames": [
+        "SL4.0"
+      ],
+      "adapter": {
+        "bigWigLocation": {
+          "uri": "S_lycopersicum_chromosomes.4.00.bw"
+        },
+        "type": "BigWigAdapter"
+      },
+      "displays": [
+        {
+          "displayId": "gc_sfasciatum_10k-LinearWiggleDisplay",
+          "maxScore": 0.7,
+          "minScore": 0.3,
+          "renderers": {
+            "DensityRenderer": {
+              "type": "DensityRenderer"
+            },
+            "LinePlotRenderer": {
+              "type": "LinePlotRenderer"
+            },
+            "XYPlotRenderer": {
+              "type": "XYPlotRenderer"
+            }
+          },
+          "type": "LinearWiggleDisplay"
+        }
+      ]
+    }
+  ],
+  "defaultSession": {
+    "name": "New Session"
+  }
+}
