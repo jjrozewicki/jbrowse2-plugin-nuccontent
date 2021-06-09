@@ -1,61 +1,62 @@
 import {
   BaseFeatureDataAdapter,
-  BaseOptions,
-} from '@jbrowse/core/data_adapters/BaseAdapter'
-import { AnyConfigurationModel } from '@jbrowse/core/configuration/configurationSchema'
-import { getSubAdapterType } from '@jbrowse/core/data_adapters/dataAdapterCache'
-import { ObservableCreate } from '@jbrowse/core/util/rxjs'
-import { readConfObject } from '@jbrowse/core/configuration'
-import { Region, NoAssemblyRegion } from '@jbrowse/core/util/types'
-import SimpleFeature, { Feature } from '@jbrowse/core/util/simpleFeature'
-import { toArray } from 'rxjs/operators'
+  BaseOptions
+} from "@jbrowse/core/data_adapters/BaseAdapter";
+import { AnyConfigurationModel } from "@jbrowse/core/configuration/configurationSchema";
+import { getSubAdapterType } from "@jbrowse/core/data_adapters/dataAdapterCache";
+import { ObservableCreate } from "@jbrowse/core/util/rxjs";
+import { readConfObject } from "@jbrowse/core/configuration";
+import { Region, NoAssemblyRegion } from "@jbrowse/core/util/types";
+import SimpleFeature, { Feature } from "@jbrowse/core/util/simpleFeature";
+import { toArray } from "rxjs/operators";
 
 function count_regexp(target_string: string, regexp_string: string): number {
-  let regexp = new RegExp(regexp_string, 'g')
-  let matches = target_string.matchAll(regexp)
-  let count = 0
+  let regexp = new RegExp(regexp_string, "g");
+  let matches = target_string.matchAll(regexp);
+  let count = 0;
   while (matches.next().done == false) {
-    count += 1
+    count += 1;
   }
-  return count
+  return count;
 }
 
 export default class extends BaseFeatureDataAdapter {
-  private config: AnyConfigurationModel
+  private config: AnyConfigurationModel;
 
-  private getSubAdapter?: getSubAdapterType
+  private getSubAdapter?: getSubAdapterType;
 
-  public static capabilities = ['hasLocalStats']
+  public static capabilities = ["hasLocalStats"];
 
   public constructor(
     config: AnyConfigurationModel,
-    getSubAdapter?: getSubAdapterType,
+    getSubAdapter?: getSubAdapterType
   ) {
-    super(config)
-    this.config = config
-    this.getSubAdapter = getSubAdapter
+    super(config);
+    this.config = config;
+    this.getSubAdapter = getSubAdapter;
+    //TODO: error checking for values written directly in the config
   }
 
   public async configure() {
     // instantiate the sequence adapter
-    const sequenceAdapter = readConfObject(this.config, 'sequenceAdapter')
+    const sequenceAdapter = readConfObject(this.config, "sequenceAdapter");
 
-    const dataAdapter = await this.getSubAdapter?.(sequenceAdapter)
+    const dataAdapter = await this.getSubAdapter?.(sequenceAdapter);
     if (!dataAdapter) {
-      throw new Error('Error getting subadapter')
+      throw new Error("Error getting subadapter");
     }
-    return dataAdapter.dataAdapter as BaseFeatureDataAdapter
+    return dataAdapter.dataAdapter as BaseFeatureDataAdapter;
   }
 
   public async getRefNames() {
-    const sequenceAdapter = await this.configure()
-    return sequenceAdapter.getRefNames()
+    const sequenceAdapter = await this.configure();
+    return sequenceAdapter.getRefNames();
   }
 
   public async getRegions(): Promise<NoAssemblyRegion[]> {
-    const sequenceAdapter = await this.configure()
+    const sequenceAdapter = await this.configure();
     // @ts-ignore
-    return sequenceAdapter.getRegions()
+    return sequenceAdapter.getRegions();
   }
 
   /**
@@ -64,64 +65,67 @@ export default class extends BaseFeatureDataAdapter {
    * @returns Observable of Feature objects in the region
    */
   public getFeatures(query: Region, opts: BaseOptions) {
-    let windowSize = readConfObject(this.config, ['windowSize'])
-    let windowDelta = windowSize //TOOD: make this configurable again but better
-    let calcMode = readConfObject(this.config, ['calculationMode'])
-    let gRegExp = readConfObject(this.config, ['gRegExp'])
-    let cRegExp = readConfObject(this.config, ['cRegExp'])
-    let ValidNucRegExp = readConfObject(this.config, ['ValidNucRegExp'])
+    let windowSize = readConfObject(this.config, ["windowSize"]);
+    let windowDelta = windowSize * (readConfObject(this.config, ["windowOverlap"]) / 100.0);
+    if (windowDelta == 0) {
+      windowDelta = windowSize
+    }
+    let calcMode = readConfObject(this.config, ["calculationMode"]);
+    let regExpA = "[" + readConfObject(this.config, ["charactersA"]) + "]";
+    let regExpB = "[" + readConfObject(this.config, ["charactersB"]) + "]";
+    let regExpAll = "[" + readConfObject(this.config, ["charactersAll"]) + "]";
 
     return ObservableCreate<Feature>(async observer => {
-      const sequenceAdapter = await this.configure()
-      let { start: queryStart, end: queryEnd } = query
+      const sequenceAdapter = await this.configure();
+      let { start: queryStart, end: queryEnd } = query;
 
       //Set the start/end one chunk before/after the current view
-      queryStart = Math.max(0, queryStart - windowDelta)
-      queryEnd += windowDelta
+      queryStart = Math.max(0, queryStart - windowDelta);
+      queryEnd += windowDelta;
 
       //Quantize queryStart and queryEnd so the windowing behaves intuitively
-      queryStart = Math.floor(queryStart/windowDelta) * windowDelta
-      queryEnd = Math.floor(queryEnd/windowDelta) * windowDelta
+      queryStart = Math.floor(queryStart / windowDelta) * windowDelta;
+      queryEnd = Math.floor(queryEnd / windowDelta) * windowDelta;
 
       if (queryEnd < 0 || queryStart > queryEnd) {
-        observer.complete()
-        return
+        observer.complete();
+        return;
       }
 
       const ret = sequenceAdapter.getFeatures(
         { ...query, start: queryStart, end: queryEnd },
-        opts,
-      )
-      const [feat] = await ret.pipe(toArray()).toPromise()
-      const sequence = feat.get('seq')
+        opts
+      );
+      const [feat] = await ret.pipe(toArray()).toPromise();
+      const sequence = feat.get("seq");
 
-      const f = windowSize === 1
+      const f = windowSize === 1;
       for (let i = 0; i < sequence.length; i += windowDelta) {
-        const seq_chunk = f ? sequence[i] : sequence.slice(i, i + windowSize)
+        const seq_chunk = f ? sequence[i] : sequence.slice(i, i + windowSize);
 
-        let ng = count_regexp(seq_chunk, gRegExp)
-        let nc = count_regexp(seq_chunk, cRegExp)
-        let len = count_regexp(seq_chunk, ValidNucRegExp)
+        let n_regExpA = count_regexp(seq_chunk, regExpA);
+        let n_regExpB = count_regexp(seq_chunk, regExpB);
+        let len = count_regexp(seq_chunk, regExpAll);
 
-        let score = 0
-        if (calcMode === 'average') {
-          score = (ng + nc) / (len || 1)
-        } else if (calcMode === 'skew') {
-          score = (ng - nc) / (ng + nc || 1)
+        let score = 0;
+        if (calcMode === "average") {
+          score = (n_regExpA + n_regExpB) / (len || 1);
+        } else if (calcMode === "skew") {
+          score = (n_regExpA - n_regExpB) / (n_regExpA + n_regExpB || 1);
         }
 
         const new_simple_feat = new SimpleFeature({
-            uniqueId: `${this.id}_${queryStart + i}`,
-            start: queryStart + i,
-            end: queryStart + i + windowDelta,
-            score,
-        })
+          uniqueId: `${this.id}_${queryStart + i}`,
+          start: queryStart + i,
+          end: queryStart + i + windowDelta,
+          score
+        });
 
-        observer.next(new_simple_feat)
+        observer.next(new_simple_feat);
       }
 
-      observer.complete()
-    })
+      observer.complete();
+    });
   }
 
   /**

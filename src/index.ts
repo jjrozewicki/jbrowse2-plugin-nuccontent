@@ -1,52 +1,52 @@
-import AdapterType from '@jbrowse/core/pluggableElementTypes/AdapterType'
-import TrackType from '@jbrowse/core/pluggableElementTypes/TrackType'
-import Plugin from '@jbrowse/core/Plugin'
-import PluginManager from '@jbrowse/core/PluginManager'
+import AdapterType from "@jbrowse/core/pluggableElementTypes/AdapterType";
+import TrackType from "@jbrowse/core/pluggableElementTypes/TrackType";
+import Plugin from "@jbrowse/core/Plugin";
+import PluginManager from "@jbrowse/core/PluginManager";
 import {
   createBaseTrackConfig,
-  createBaseTrackModel,
-} from '@jbrowse/core/pluggableElementTypes/models'
-import { ConfigurationSchema } from '@jbrowse/core/configuration'
+  createBaseTrackModel
+} from "@jbrowse/core/pluggableElementTypes/models";
+import { ConfigurationSchema } from "@jbrowse/core/configuration";
 
-import NucContentAdapter from './NucContentAdapter'
+import NucContentAdapter from "./NucContentAdapter";
 import {
   configSchemaFactory as nucContentDisplayConfigSchemaFactory,
-  stateModelFactory as nucContentDisplayModelFactory,
+  stateModelFactory as nucContentDisplayModelFactory
 } from "./NucContentDisplay";
 
 export default class NucContentPlugin extends Plugin {
-  name = 'NucContentPlugin'
+  name = "NucContentPlugin";
 
   install(pluginManager: PluginManager) {
     pluginManager.addTrackType(() => {
       const configSchema = ConfigurationSchema(
-        'NucContentTrack',
+        "NucContentTrack",
         {},
-        { baseConfiguration: createBaseTrackConfig(pluginManager) },
-      )
+        { baseConfiguration: createBaseTrackConfig(pluginManager) }
+      );
       return new TrackType({
-        name: 'NucContentTrack',
+        name: "NucContentTrack",
         configSchema,
         stateModel: createBaseTrackModel(
           pluginManager,
-          'NucContentTrack',
-          configSchema,
-        ),
-      })
-    })
+          "NucContentTrack",
+          configSchema
+        )
+      });
+    });
 
     pluginManager.addAdapterType(
       () =>
         new AdapterType({
-          name: 'NucContentAdapter',
-          ...pluginManager.load(NucContentAdapter),
-        }),
-    )
+          name: "NucContentAdapter",
+          ...pluginManager.load(NucContentAdapter)
+        })
+    );
 
     const DisplayType =
       pluginManager.lib["@jbrowse/core/pluggableElementTypes/DisplayType"];
     const WigglePlugin = pluginManager.getPlugin(
-      "WigglePlugin",
+      "WigglePlugin"
     ) as import("@jbrowse/plugin-wiggle").default;
     const { LinearWiggleDisplayReactComponent } = WigglePlugin.exports;
 
@@ -55,17 +55,11 @@ export default class NucContentPlugin extends Plugin {
       return new DisplayType({
         name: "NucContentDisplay",
         configSchema,
-        stateModel: nucContentDisplayModelFactory(
-          pluginManager,
-          configSchema,
-        ),
+        stateModel: nucContentDisplayModelFactory(pluginManager, configSchema),
         trackType: "FeatureTrack",
         viewType: "LinearGenomeView",
-        ReactComponent: LinearWiggleDisplayReactComponent,
+        ReactComponent: LinearWiggleDisplayReactComponent
       });
     });
-
   }
 }
-
-

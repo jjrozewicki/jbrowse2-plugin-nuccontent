@@ -89,39 +89,84 @@ function _setPrototypeOf(o, p) {
   return _setPrototypeOf(o, p);
 }
 
+var defaultWindowSize = 1000;
+var defaultWindowOverlap = 0;
+var defaultCharactersA = "Gg";
+var defaultCharactersB = "Cc";
+var defaultCharactersAll = "AaTtGgCc";
+var defaultCalculationMode = "average";
 var configSchemaF = (function (pluginManager) {
-  return configuration.ConfigurationSchema('NucContentAdapter', {
-    sequenceAdapter: pluginManager.pluggableConfigSchemaType('adapter'),
+  return configuration.ConfigurationSchema("NucContentAdapter", {
+    sequenceAdapter: pluginManager.pluggableConfigSchemaType("adapter"),
     windowSize: {
-      type: 'number',
-      defaultValue: 1000,
-      description: 'size of the region to calculate average over'
+      type: "integer",
+      defaultValue: defaultWindowSize,
+      description: "size of the region to calculate average over"
     },
-    gRegExp: {
-      type: 'string',
-      defaultValue: '[Gg]',
-      description: 'regular expression to use for counting G nucleotides'
+    windowOverlap: {
+      type: "integer",
+      defaultValue: defaultWindowOverlap,
+      description: "percent to overlap regions by"
     },
-    cRegExp: {
-      type: 'string',
-      defaultValue: '[Cc]',
-      description: 'regular expression to use for counting C nucleotides'
+    charactersA: {
+      type: "string",
+      defaultValue: defaultCharactersA,
+      description: "which characters to count for group A"
     },
-    ValidNucRegExp: {
-      type: 'string',
-      defaultValue: '[AaTtGgCc]',
-      description: 'regular expression to use for counting non-GC nucleotides'
+    charactersB: {
+      type: "string",
+      defaultValue: defaultCharactersB,
+      description: "which characters to count for group B"
+    },
+    charactersAll: {
+      type: "string",
+      defaultValue: defaultCharactersAll,
+      description: "list of all valid characters"
     },
     calculationMode: {
-      type: 'stringEnum',
-      defaultValue: 'average',
-      model: mobxStateTree.types.enumeration('Calculation mode', ['average', 'skew']),
-      description: 'type of calculation to use for nucleotide content'
+      type: "stringEnum",
+      defaultValue: defaultCalculationMode,
+      model: mobxStateTree.types.enumeration("Calculation mode", ["average", "skew"]),
+      description: "type of calculation to use for statistics"
     }
   }, {
     explicitlyTyped: true
   });
 });
+function sanitizeWindowSize(value) {
+  value = parseInt(value);
+
+  if (isNaN(value)) {
+    return defaultWindowSize;
+  }
+
+  if (value < 0) {
+    value = Math.abs(value);
+  }
+
+  if (value < 1) {
+    value = 1;
+  }
+
+  return value;
+}
+function sanitizeWindowOverlap(value) {
+  value = parseInt(value);
+
+  if (isNaN(value)) {
+    return defaultWindowOverlap;
+  }
+
+  if (value < 0) {
+    value = Math.abs(value);
+  }
+
+  if (value >= 100) {
+    value = 99;
+  }
+
+  return value;
+}
 
 function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
@@ -878,7 +923,7 @@ try {
 });
 
 function count_regexp(target_string, regexp_string) {
-  var regexp = new RegExp(regexp_string, 'g');
+  var regexp = new RegExp(regexp_string, "g");
   var matches = target_string.matchAll(regexp);
   var count = 0;
 
@@ -897,7 +942,8 @@ var default_1 = /*#__PURE__*/function (_BaseFeatureDataAdapt) {
 
     _this = _BaseFeatureDataAdapt.call(this, config) || this;
     _this.config = config;
-    _this.getSubAdapter = getSubAdapter;
+    _this.getSubAdapter = getSubAdapter; //TODO: error checking for values written directly in the config
+
     return _this;
   }
 
@@ -913,7 +959,7 @@ var default_1 = /*#__PURE__*/function (_BaseFeatureDataAdapt) {
           switch (_context.prev = _context.next) {
             case 0:
               // instantiate the sequence adapter
-              sequenceAdapter = configuration.readConfObject(this.config, 'sequenceAdapter');
+              sequenceAdapter = configuration.readConfObject(this.config, "sequenceAdapter");
               _context.next = 3;
               return (_this$getSubAdapter = this.getSubAdapter) == null ? void 0 : _this$getSubAdapter.call(this, sequenceAdapter);
 
@@ -925,7 +971,7 @@ var default_1 = /*#__PURE__*/function (_BaseFeatureDataAdapt) {
                 break;
               }
 
-              throw new Error('Error getting subadapter');
+              throw new Error("Error getting subadapter");
 
             case 6:
               return _context.abrupt("return", dataAdapter.dataAdapter);
@@ -1012,16 +1058,20 @@ var default_1 = /*#__PURE__*/function (_BaseFeatureDataAdapt) {
   _proto.getFeatures = function getFeatures(query, opts) {
     var _this2 = this;
 
-    var windowSize = configuration.readConfObject(this.config, ['windowSize']);
-    var windowDelta = windowSize; //TOOD: make this configurable again but better
+    var windowSize = configuration.readConfObject(this.config, ["windowSize"]);
+    var windowDelta = windowSize * (configuration.readConfObject(this.config, ["windowOverlap"]) / 100.0);
 
-    var calcMode = configuration.readConfObject(this.config, ['calculationMode']);
-    var gRegExp = configuration.readConfObject(this.config, ['gRegExp']);
-    var cRegExp = configuration.readConfObject(this.config, ['cRegExp']);
-    var ValidNucRegExp = configuration.readConfObject(this.config, ['ValidNucRegExp']);
+    if (windowDelta == 0) {
+      windowDelta = windowSize;
+    }
+
+    var calcMode = configuration.readConfObject(this.config, ["calculationMode"]);
+    var regExpA = "[" + configuration.readConfObject(this.config, ["charactersA"]) + "]";
+    var regExpB = "[" + configuration.readConfObject(this.config, ["charactersB"]) + "]";
+    var regExpAll = "[" + configuration.readConfObject(this.config, ["charactersAll"]) + "]";
     return rxjs.ObservableCreate( /*#__PURE__*/function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(observer) {
-        var sequenceAdapter, queryStart, queryEnd, ret, _yield$ret$pipe$toPro, feat, sequence, f, i, seq_chunk, ng, nc, len, score, new_simple_feat;
+        var sequenceAdapter, queryStart, queryEnd, ret, _yield$ret$pipe$toPro, feat, sequence, f, i, seq_chunk, n_regExpA, n_regExpB, len, score, new_simple_feat;
 
         return runtime_1.wrap(function _callee4$(_context4) {
           while (1) {
@@ -1059,20 +1109,20 @@ var default_1 = /*#__PURE__*/function (_BaseFeatureDataAdapt) {
               case 14:
                 _yield$ret$pipe$toPro = _context4.sent;
                 feat = _yield$ret$pipe$toPro[0];
-                sequence = feat.get('seq');
+                sequence = feat.get("seq");
                 f = windowSize === 1;
 
                 for (i = 0; i < sequence.length; i += windowDelta) {
                   seq_chunk = f ? sequence[i] : sequence.slice(i, i + windowSize);
-                  ng = count_regexp(seq_chunk, gRegExp);
-                  nc = count_regexp(seq_chunk, cRegExp);
-                  len = count_regexp(seq_chunk, ValidNucRegExp);
+                  n_regExpA = count_regexp(seq_chunk, regExpA);
+                  n_regExpB = count_regexp(seq_chunk, regExpB);
+                  len = count_regexp(seq_chunk, regExpAll);
                   score = 0;
 
-                  if (calcMode === 'average') {
-                    score = (ng + nc) / (len || 1);
-                  } else if (calcMode === 'skew') {
-                    score = (ng - nc) / (ng + nc || 1);
+                  if (calcMode === "average") {
+                    score = (n_regExpA + n_regExpB) / (len || 1);
+                  } else if (calcMode === "skew") {
+                    score = (n_regExpA - n_regExpB) / (n_regExpA + n_regExpB || 1);
                   }
 
                   new_simple_feat = new SimpleFeature({
@@ -1112,7 +1162,7 @@ var default_1 = /*#__PURE__*/function (_BaseFeatureDataAdapt) {
 
   return default_1;
 }(BaseAdapter.BaseFeatureDataAdapter);
-default_1.capabilities = ['hasLocalStats'];
+default_1.capabilities = ["hasLocalStats"];
 
 var NucContentAdapter = (function (pluginManager) {
   return {
@@ -1178,7 +1228,7 @@ function stateModelFactory(pluginManager, configSchema) {
     return {
       get trackMenuItems() {
         var new_menu_items = [{
-          label: "NucContent Settings",
+          label: "NucContent settings",
           onClick: function onClick() {
             //@ts-ignore
             util.getSession(self).setDialogComponent(SetWindowDlg, {
@@ -1193,15 +1243,14 @@ function stateModelFactory(pluginManager, configSchema) {
   });
 
   function SetWindowDlg(props) {
-    var _pluginManager$jbrequ = pluginManager.jbrequire('@material-ui/core/styles'),
-        makeStyles = _pluginManager$jbrequ.makeStyles; //@ts-ignore
-
+    var _pluginManager$jbrequ = pluginManager.jbrequire("@material-ui/core/styles"),
+        makeStyles = _pluginManager$jbrequ.makeStyles;
 
     var classes = makeStyles(function (theme) {
       return {
         root: {},
         closeButton: {
-          position: 'absolute',
+          position: "absolute",
           right: theme.spacing(1),
           top: theme.spacing(1),
           color: theme.palette.grey[500]
@@ -1211,30 +1260,51 @@ function stateModelFactory(pluginManager, configSchema) {
     var model = props.model,
         handleClose = props.handleClose;
 
-    var _pluginManager$jbrequ2 = pluginManager.jbrequire('@material-ui/core'),
+    var _pluginManager$jbrequ2 = pluginManager.jbrequire("@material-ui/core"),
         Button = _pluginManager$jbrequ2.Button;
 
-    var _pluginManager$jbrequ3 = pluginManager.jbrequire('@material-ui/core'),
+    var _pluginManager$jbrequ3 = pluginManager.jbrequire("@material-ui/core"),
         Dialog = _pluginManager$jbrequ3.Dialog;
 
-    var _pluginManager$jbrequ4 = pluginManager.jbrequire('@material-ui/core'),
+    var _pluginManager$jbrequ4 = pluginManager.jbrequire("@material-ui/core"),
         DialogContent = _pluginManager$jbrequ4.DialogContent;
 
-    var _pluginManager$jbrequ5 = pluginManager.jbrequire('@material-ui/core'),
+    var _pluginManager$jbrequ5 = pluginManager.jbrequire("@material-ui/core"),
         DialogTitle = _pluginManager$jbrequ5.DialogTitle;
 
-    var _pluginManager$jbrequ6 = pluginManager.jbrequire('@material-ui/core'),
-        TextField = _pluginManager$jbrequ6.TextField;
+    var _pluginManager$jbrequ6 = pluginManager.jbrequire("@material-ui/core"),
+        Divider = _pluginManager$jbrequ6.Divider;
 
-    var _pluginManager$jbrequ7 = pluginManager.jbrequire('@material-ui/core'),
-        Typography = _pluginManager$jbrequ7.Typography;
+    var _pluginManager$jbrequ7 = pluginManager.jbrequire("@material-ui/core"),
+        TextField = _pluginManager$jbrequ7.TextField;
 
-    var _pluginManager$jbrequ8 = pluginManager.jbrequire('@material-ui/core'),
-        IconButton = _pluginManager$jbrequ8.IconButton;
+    var _pluginManager$jbrequ8 = pluginManager.jbrequire("@material-ui/core"),
+        Typography = _pluginManager$jbrequ8.Typography;
 
-    var _useState = React.useState(model.adapterConfig.windowSize),
+    var _pluginManager$jbrequ9 = pluginManager.jbrequire("@material-ui/core"),
+        IconButton = _pluginManager$jbrequ9.IconButton;
+
+    var _pluginManager$jbrequ10 = pluginManager.jbrequire("@material-ui/core"),
+        MenuItem = _pluginManager$jbrequ10.MenuItem; //adapterConfig doesn't have default values due to getSnapshot so we have to guard against that
+
+
+    var current_window_size = model.adapterConfig.windowSize || defaultWindowSize;
+
+    var _useState = React.useState(current_window_size.toString()),
         window_size = _useState[0],
         set_window_size = _useState[1];
+
+    var current_window_overlap = model.adapterConfig.windowOverlap || defaultWindowOverlap;
+
+    var _useState2 = React.useState(current_window_overlap.toString()),
+        window_overlap = _useState2[0],
+        set_window_overlap = _useState2[1];
+
+    var current_calculation_mode = model.adapterConfig.calculationMode || defaultCalculationMode;
+
+    var _useState3 = React.useState(current_calculation_mode),
+        calculation_mode = _useState3[0],
+        set_calculation_mode = _useState3[1];
 
     return React__default.createElement(Dialog, {
       open: true,
@@ -1244,28 +1314,64 @@ function stateModelFactory(pluginManager, configSchema) {
       onClick: handleClose
     }, React__default.createElement(CloseIcon, null))), React__default.createElement(DialogContent, {
       style: {
-        overflowX: 'hidden'
+        overflowX: "hidden"
       }
     }, React__default.createElement("div", {
       className: classes.root
     }, React__default.createElement(Typography, null, "Window size: "), React__default.createElement(TextField, {
       value: window_size,
       onChange: function onChange(event) {
-        //@ts-ignore
-        set_window_size(event.target.value);
+        var target = event.target;
+
+        if (target.value == "") {
+          set_window_size(target.value);
+        } else {
+          set_window_size(sanitizeWindowSize(target.value).toString());
+        }
       },
       placeholder: "Enter window size"
+    }), React__default.createElement(Typography, null, "Window overlap (in percent): "), React__default.createElement(TextField, {
+      value: window_overlap,
+      onChange: function onChange(event) {
+        var target = event.target;
+
+        if (target.value == "") {
+          set_window_overlap(target.value);
+        } else {
+          set_window_overlap(sanitizeWindowOverlap(target.value).toString());
+        }
+      },
+      placeholder: "Enter window overlap"
+    }), React__default.createElement(Typography, null, "Calculation mode: "), React__default.createElement(TextField, {
+      select: true,
+      style: {
+        marginRight: 20
+      },
+      value: calculation_mode,
+      onChange: function onChange(event) {
+        var target = event.target;
+        set_calculation_mode(target.value);
+      }
+    }, React__default.createElement(MenuItem, {
+      key: "average",
+      value: "average"
+    }, "Average"), React__default.createElement(MenuItem, {
+      key: "skew",
+      value: "skew"
+    }, "Skew")), React__default.createElement(Divider, {
+      style: {
+        marginTop: 5,
+        marginBottom: 5
+      },
+      light: true
     }), React__default.createElement(Button, {
       variant: "contained",
       color: "primary",
       type: "submit",
-      style: {
-        marginLeft: 20
-      },
       onClick: function onClick() {
-        //@ts-ignore
-        model.adapterConfig.windowSize = parseInt(window_size); //@ts-ignore
-
+        model.adapterConfig.windowOverlap = sanitizeWindowOverlap(window_overlap);
+        model.adapterConfig.windowSize = sanitizeWindowSize(window_size);
+        model.adapterConfig.calculationMode = calculation_mode;
         model.parentTrack.configuration.setSubschema("adapter", model.adapterConfig);
         handleClose();
       }
@@ -1280,7 +1386,7 @@ var NucContentPlugin = /*#__PURE__*/function (_Plugin) {
     var _this;
 
     _this = _Plugin.apply(this, arguments) || this;
-    _this.name = 'NucContentPlugin';
+    _this.name = "NucContentPlugin";
     return _this;
   }
 
@@ -1288,18 +1394,18 @@ var NucContentPlugin = /*#__PURE__*/function (_Plugin) {
 
   _proto.install = function install(pluginManager) {
     pluginManager.addTrackType(function () {
-      var configSchema = configuration.ConfigurationSchema('NucContentTrack', {}, {
+      var configSchema = configuration.ConfigurationSchema("NucContentTrack", {}, {
         baseConfiguration: models.createBaseTrackConfig(pluginManager)
       });
       return new TrackType({
-        name: 'NucContentTrack',
+        name: "NucContentTrack",
         configSchema: configSchema,
-        stateModel: models.createBaseTrackModel(pluginManager, 'NucContentTrack', configSchema)
+        stateModel: models.createBaseTrackModel(pluginManager, "NucContentTrack", configSchema)
       });
     });
     pluginManager.addAdapterType(function () {
       return new AdapterType(_extends({
-        name: 'NucContentAdapter'
+        name: "NucContentAdapter"
       }, pluginManager.load(NucContentAdapter)));
     });
     var DisplayType = pluginManager.lib["@jbrowse/core/pluggableElementTypes/DisplayType"];

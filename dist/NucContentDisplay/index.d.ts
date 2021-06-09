@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import PluginManager from "@jbrowse/core/PluginManager";
 export declare function configSchemaFactory(pluginManager: PluginManager): import("@jbrowse/core/configuration/configurationSchema").AnyConfigurationSchemaType;
 export declare function stateModelFactory(pluginManager: PluginManager, configSchema: any): import("mobx-state-tree").IModelType<{

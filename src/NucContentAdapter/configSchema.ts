@@ -1,43 +1,87 @@
-import { types } from 'mobx-state-tree'
-import PluginManager from '@jbrowse/core/PluginManager'
-import { ConfigurationSchema } from '@jbrowse/core/configuration'
+import { types } from "mobx-state-tree";
+import PluginManager from "@jbrowse/core/PluginManager";
+import { ConfigurationSchema } from "@jbrowse/core/configuration";
+
+export const defaultWindowSize = 1000;
+export const defaultWindowOverlap = 0;
+export const defaultCharactersA = "Gg";
+export const defaultCharactersB = "Cc";
+export const defaultCharactersAll = "AaTtGgCc";
+export const defaultCalculationMode = "average";
 
 export default (pluginManager: PluginManager) => {
   return ConfigurationSchema(
-    'NucContentAdapter',
+    "NucContentAdapter",
     {
-      sequenceAdapter:
-        pluginManager.pluggableConfigSchemaType('adapter'),
+      sequenceAdapter: pluginManager.pluggableConfigSchemaType("adapter"),
       windowSize: {
-        type: 'number',
-        defaultValue: 1000,
-        description: 'size of the region to calculate average over',
+        type: "integer",
+        defaultValue: defaultWindowSize,
+        description: "size of the region to calculate average over"
       },
-      gRegExp: {
-        type: 'string',
-        defaultValue: '[Gg]',
-        description: 'regular expression to use for counting G nucleotides',
+      windowOverlap: {
+        type: "integer",
+        defaultValue: defaultWindowOverlap,
+        description: "percent to overlap regions by"
       },
-      cRegExp: {
-        type: 'string',
-        defaultValue: '[Cc]',
-        description: 'regular expression to use for counting C nucleotides',
+      charactersA: {
+        type: "string",
+        defaultValue: defaultCharactersA,
+        description: "which characters to count for group A"
       },
-      ValidNucRegExp: {
-        type: 'string',
-        defaultValue: '[AaTtGgCc]',
-        description: 'regular expression to use for counting non-GC nucleotides',
+      charactersB: {
+        type: "string",
+        defaultValue: defaultCharactersB,
+        description: "which characters to count for group B"
+      },
+      charactersAll: {
+        type: "string",
+        defaultValue: defaultCharactersAll,
+        description: "list of all valid characters"
       },
       calculationMode: {
-        type: 'stringEnum',
-        defaultValue: 'average',
-        model: types.enumeration('Calculation mode', [
-          'average',
-          'skew',
-        ]),
-        description: 'type of calculation to use for nucleotide content',
-      },
+        type: "stringEnum",
+        defaultValue: defaultCalculationMode,
+        model: types.enumeration("Calculation mode", ["average", "skew"]),
+        description: "type of calculation to use for statistics"
+      }
     },
-    { explicitlyTyped: true },
-  )
+    { explicitlyTyped: true }
+  );
+};
+
+export function sanitizeWindowSize(value: any): number {
+  value = parseInt(value);
+
+  if (isNaN(value)) {
+    return defaultWindowSize;
+  }
+
+  if (value < 0) {
+    value = Math.abs(value)
+  }
+
+  if ( value < 1) {
+    value = 1
+  }
+
+  return value;
+}
+
+export function sanitizeWindowOverlap(value: any): number {
+  value = parseInt(value);
+
+  if (isNaN(value)) {
+    return defaultWindowOverlap;
+  }
+
+  if (value < 0) {
+    value = Math.abs(value)
+  }
+
+  if (value >= 100) {
+    value = 99
+  }
+
+  return value;
 }

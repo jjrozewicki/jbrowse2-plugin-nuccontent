@@ -35,6 +35,7 @@
         "SL4.0"
       ],
       "adapter": {
+        "type": "NucContentAdapter",
         "sequenceAdapter": {
           "type": "BgzipFastaAdapter",
           "faiLocation": {
@@ -47,9 +48,11 @@
             "uri": "./sample_config/S_lycopersicum_chromosomes.4.00.fa.gz.gzi"
           }
         },
-        "type": "NucContentAdapter",
-        "windowDelta": 10000,
-        "windowSize": 10000
+        "charactersA": "Gg",
+        "charactersB": "Cc",
+        "charactersAll": "AaTtGgCc",
+        "windowSize": 10000,
+        "windowOverlap": 0
       },
       "displays": [
         {

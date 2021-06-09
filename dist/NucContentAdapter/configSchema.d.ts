@@ -1,3 +1,11 @@
-import PluginManager from '@jbrowse/core/PluginManager';
+import PluginManager from "@jbrowse/core/PluginManager";
+export declare const defaultWindowSize = 1000;
+export declare const defaultWindowOverlap = 0;
+export declare const defaultCharactersA = "Gg";
+export declare const defaultCharactersB = "Cc";
+export declare const defaultCharactersAll = "AaTtGgCc";
+export declare const defaultCalculationMode = "average";
 declare const _default: (pluginManager: PluginManager) => import("@jbrowse/core/configuration/configurationSchema").AnyConfigurationSchemaType;
 export default _default;
+export declare function sanitizeWindowSize(value: any): number;
+export declare function sanitizeWindowOverlap(value: any): number;
