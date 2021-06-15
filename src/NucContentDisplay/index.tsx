@@ -11,8 +11,14 @@ import { types } from "mobx-state-tree";
 
 import CloseIcon from "@material-ui/icons/Close";
 
-import { defaultWindowOverlap, sanitizeWindowOverlap } from "../NucContentAdapter/configSchema";
-import { defaultWindowSize, sanitizeWindowSize } from "../NucContentAdapter/configSchema";
+import {
+  defaultWindowOverlap,
+  sanitizeWindowOverlap
+} from "../NucContentAdapter/configSchema";
+import {
+  defaultWindowSize,
+  sanitizeWindowSize
+} from "../NucContentAdapter/configSchema";
 import { defaultCalculationMode } from "../NucContentAdapter/configSchema";
 
 export function configSchemaFactory(pluginManager: PluginManager) {
@@ -146,14 +152,23 @@ export function stateModelFactory(
     const { MenuItem } = pluginManager.jbrequire("@material-ui/core");
 
     //adapterConfig doesn't have default values due to getSnapshot so we have to guard against that
-    const current_window_size = model.adapterConfig.windowSize || defaultWindowSize;
-    const [window_size, set_window_size] = useState( current_window_size.toString() );
+    const current_window_size =
+      model.adapterConfig.windowSize || defaultWindowSize;
+    const [window_size, set_window_size] = useState(
+      current_window_size.toString()
+    );
 
-    const current_window_overlap = model.adapterConfig.windowOverlap || defaultWindowOverlap;
-    const [window_overlap, set_window_overlap] = useState( current_window_overlap.toString() );
+    const current_window_overlap =
+      model.adapterConfig.windowOverlap || defaultWindowOverlap;
+    const [window_overlap, set_window_overlap] = useState(
+      current_window_overlap.toString()
+    );
 
-    const current_calculation_mode = model.adapterConfig.calculationMode || defaultCalculationMode;
-    const [calculation_mode, set_calculation_mode] = useState( current_calculation_mode );
+    const current_calculation_mode =
+      model.adapterConfig.calculationMode || defaultCalculationMode;
+    const [calculation_mode, set_calculation_mode] = useState(
+      current_calculation_mode
+    );
 
     return (
       <Dialog open onClose={handleClose}>
@@ -178,7 +193,6 @@ export function stateModelFactory(
               }}
               placeholder="Enter window size"
             />
-
             <Typography>Window overlap (in percent): </Typography>
             <TextField
               value={window_overlap}
@@ -187,12 +201,13 @@ export function stateModelFactory(
                 if (target.value == "") {
                   set_window_overlap(target.value);
                 } else {
-                  set_window_overlap(sanitizeWindowOverlap(target.value).toString());
+                  set_window_overlap(
+                    sanitizeWindowOverlap(target.value).toString()
+                  );
                 }
               }}
               placeholder="Enter window overlap"
             />
-
             <Typography>Calculation mode: </Typography>
             <TextField
               select
@@ -203,14 +218,15 @@ export function stateModelFactory(
                 set_calculation_mode(target.value);
               }}
             >
-              <MenuItem key="average" value="average">Average</MenuItem>
-              <MenuItem key="skew" value="skew">Skew</MenuItem>
+              <MenuItem key="average" value="average">
+                Average
+              </MenuItem>
+              <MenuItem key="skew" value="skew">
+                Skew
+              </MenuItem>
             </TextField>
-
-            <Divider
-              style={{ marginTop: 5, marginBottom: 5}}
-              light />
-
+            <Divider style={{ marginTop: 5, marginBottom: 5 }} light />
+            //TODO: get this to submit when you hit the enter key
             <Button
               variant="contained"
               color="primary"
