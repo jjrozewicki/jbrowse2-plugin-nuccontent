@@ -10,6 +10,8 @@ import { Region, NoAssemblyRegion } from "@jbrowse/core/util/types";
 import SimpleFeature, { Feature } from "@jbrowse/core/util/simpleFeature";
 import { toArray } from "rxjs/operators";
 
+import { sanitizeWindowSize, sanitizeWindowOverlap } from "./configSchema";
+
 function count_regexp(target_string: string, regexp_string: string): number {
   let regexp = new RegExp(regexp_string, "g");
   let matches = target_string.matchAll(regexp);
@@ -18,6 +20,12 @@ function count_regexp(target_string: string, regexp_string: string): number {
     count += 1;
   }
   return count;
+}
+
+//Taken from:
+//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+function escapeRegExp(str: string) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 }
 
 export default class extends BaseFeatureDataAdapter {
@@ -34,7 +42,6 @@ export default class extends BaseFeatureDataAdapter {
     super(config);
     this.config = config;
     this.getSubAdapter = getSubAdapter;
-    //TODO: error checking for values written directly in the config
   }
 
   public async configure() {
@@ -65,15 +72,23 @@ export default class extends BaseFeatureDataAdapter {
    * @returns Observable of Feature objects in the region
    */
   public getFeatures(query: Region, opts: BaseOptions) {
-    let windowSize = readConfObject(this.config, ["windowSize"]);
-    let windowDelta = windowSize * (readConfObject(this.config, ["windowOverlap"]) / 100.0);
+    let windowSize = sanitizeWindowSize(
+      readConfObject(this.config, ["windowSize"])
+    );
+    let windowOverlap = sanitizeWindowOverlap(
+      readConfObject(this.config, ["windowOverlap"])
+    );
+    let windowDelta = windowSize * (windowOverlap / 100.0);
     if (windowDelta == 0) {
-      windowDelta = windowSize
+      windowDelta = windowSize;
     }
     let calcMode = readConfObject(this.config, ["calculationMode"]);
-    let regExpA = "[" + readConfObject(this.config, ["charactersA"]) + "]";
-    let regExpB = "[" + readConfObject(this.config, ["charactersB"]) + "]";
-    let regExpAll = "[" + readConfObject(this.config, ["charactersAll"]) + "]";
+    let regExpA =
+      "[" + escapeRegExp(readConfObject(this.config, ["charactersA"])) + "]";
+    let regExpB =
+      "[" + escapeRegExp(readConfObject(this.config, ["charactersB"])) + "]";
+    let regExpAll =
+      "[" + escapeRegExp(readConfObject(this.config, ["charactersAll"])) + "]";
 
     return ObservableCreate<Feature>(async observer => {
       const sequenceAdapter = await this.configure();

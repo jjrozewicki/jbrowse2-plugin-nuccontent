@@ -932,6 +932,12 @@ function count_regexp(target_string, regexp_string) {
   }
 
   return count;
+} //Taken from:
+//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+
+
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 }
 
 var default_1 = /*#__PURE__*/function (_BaseFeatureDataAdapt) {
@@ -942,8 +948,7 @@ var default_1 = /*#__PURE__*/function (_BaseFeatureDataAdapt) {
 
     _this = _BaseFeatureDataAdapt.call(this, config) || this;
     _this.config = config;
-    _this.getSubAdapter = getSubAdapter; //TODO: error checking for values written directly in the config
-
+    _this.getSubAdapter = getSubAdapter;
     return _this;
   }
 
@@ -1058,17 +1063,18 @@ var default_1 = /*#__PURE__*/function (_BaseFeatureDataAdapt) {
   _proto.getFeatures = function getFeatures(query, opts) {
     var _this2 = this;
 
-    var windowSize = configuration.readConfObject(this.config, ["windowSize"]);
-    var windowDelta = windowSize * (configuration.readConfObject(this.config, ["windowOverlap"]) / 100.0);
+    var windowSize = sanitizeWindowSize(configuration.readConfObject(this.config, ["windowSize"]));
+    var windowOverlap = sanitizeWindowOverlap(configuration.readConfObject(this.config, ["windowOverlap"]));
+    var windowDelta = windowSize * (windowOverlap / 100.0);
 
     if (windowDelta == 0) {
       windowDelta = windowSize;
     }
 
     var calcMode = configuration.readConfObject(this.config, ["calculationMode"]);
-    var regExpA = "[" + configuration.readConfObject(this.config, ["charactersA"]) + "]";
-    var regExpB = "[" + configuration.readConfObject(this.config, ["charactersB"]) + "]";
-    var regExpAll = "[" + configuration.readConfObject(this.config, ["charactersAll"]) + "]";
+    var regExpA = "[" + escapeRegExp(configuration.readConfObject(this.config, ["charactersA"])) + "]";
+    var regExpB = "[" + escapeRegExp(configuration.readConfObject(this.config, ["charactersB"])) + "]";
+    var regExpAll = "[" + escapeRegExp(configuration.readConfObject(this.config, ["charactersAll"])) + "]";
     return rxjs.ObservableCreate( /*#__PURE__*/function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(observer) {
         var sequenceAdapter, queryStart, queryEnd, ret, _yield$ret$pipe$toPro, feat, sequence, f, i, seq_chunk, n_regExpA, n_regExpB, len, score, new_simple_feat;
@@ -1364,7 +1370,8 @@ function stateModelFactory(pluginManager, configSchema) {
         marginBottom: 5
       },
       light: true
-    }), React__default.createElement(Button, {
+    }) //TODO: get this to submit when you hit the enter key
+    , "//TODO: get this to submit when you hit the enter key", React__default.createElement(Button, {
       variant: "contained",
       color: "primary",
       type: "submit",
