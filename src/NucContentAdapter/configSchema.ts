@@ -58,11 +58,11 @@ export function sanitizeWindowSize(value: any): number {
   }
 
   if (value < 0) {
-    value = Math.abs(value)
+    value = Math.abs(value);
   }
 
-  if ( value < 1) {
-    value = 1
+  if (value < 1) {
+    value = 1;
   }
 
   return value;
@@ -76,11 +76,11 @@ export function sanitizeWindowOverlap(value: any): number {
   }
 
   if (value < 0) {
-    value = Math.abs(value)
+    value = Math.abs(value);
   }
 
   if (value >= 100) {
-    value = 99
+    value = 99;
   }
 
   return value;

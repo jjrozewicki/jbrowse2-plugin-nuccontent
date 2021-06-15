@@ -14,9 +14,70 @@ Coming soon.
 
 ## Usage
 
-TODO: Upload as package and add plugin section here.
+```
+"plugins": [
+  {
+    "name": "NucContent",
+    "url": "dist/jbrowsepluginnuccontent.umd.development.js"
+  }
+}
+```
 
-TODO: Example track configuration for the JBrowse2 sample data
+### Example Track Config
+
+This plugin takes a standard Sequence Adapter configuration to load the sequence data that will be used for statistics. This could be the sequence files used for the main assembly, but could also be other kinds of sequence data that are mapped to the main assembly.
+
+```
+"tracks": [
+  {
+    "name": "GC Content (Dynamic)",
+    "trackId": "gc_content_dynamic",
+    "type": "NucContentTrack",
+    "assemblyNames": [
+      "SL4.0"
+    ],
+    "adapter": {
+      "type": "NucContentAdapter",
+      "sequenceAdapter": {
+        "type": "BgzipFastaAdapter",
+        "faiLocation": {
+          "uri": "./sample_config/S_lycopersicum_chromosomes.4.00.fa.gz.fai"
+        },
+        "fastaLocation": {
+          "uri": "./sample_config/S_lycopersicum_chromosomes.4.00.fa.gz"
+        },
+        "gziLocation": {
+          "uri": "./sample_config/S_lycopersicum_chromosomes.4.00.fa.gz.gzi"
+        }
+      },
+      "charactersA": "Gg",
+      "charactersB": "Cc",
+      "charactersAll": "AaTtGgCc",
+      "windowSize": 10000,
+      "windowOverlap": 0
+    },
+    "displays": [
+      {
+        "displayId": "gc_content_dynamic-NucContentDisplay",
+        "maxScore": 0.7,
+        "minScore": 0.3,
+        "renderers": {
+          "DensityRenderer": {
+            "type": "DensityRenderer"
+          },
+          "LinePlotRenderer": {
+            "type": "LinePlotRenderer"
+          },
+          "XYPlotRenderer": {
+            "type": "XYPlotRenderer"
+          }
+        },
+        "type": "NucContentDisplay"
+      }
+    ]
+  }
+]
+```
 
 ## Bug Reports/Issues/Contributions
 
