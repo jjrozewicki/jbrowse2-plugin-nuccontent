@@ -4,21 +4,21 @@ This NucContent plugin for JBrowse2 is designed to allow easy calculation of sta
 
 ## Install
 
-### For use in [JBrowse Web](https://jbrowse.org/jb2/docs/quickstart_web)
-
-Simply add the appropriate plugin and track settings to your configuration (documented below).
-
 ### For use in [`@jbrowse/react-linear-view`](https://www.npmjs.com/package/@jbrowse/react-linear-genome-view)
 
-Coming soon.
+```
+yarn add jbrowse2-plugin-nuccontent
+```
 
-## Usage
+### For use in [JBrowse Web](https://jbrowse.org/jb2/docs/quickstart_web)
+
+Add the appropriate plugin and track settings based on the example below.
 
 ```
 "plugins": [
   {
     "name": "NucContent",
-    "url": "dist/jbrowsepluginnuccontent.umd.development.js"
+    "url": "https://unpkg.com/browse/jbrowse2-plugin-nuccontent@latest/dist/jbrowsepluginnuccontent.umd.production.min.js"
   }
 }
 ```
@@ -81,7 +81,9 @@ This plugin takes a standard Sequence Adapter configuration to load the sequence
 
 ## Bug Reports/Issues/Contributions
 
-Bug reports and issues for this plugin can be submitted via this Github repository.
+Bug reports and issues for this plugin can be submitted via this Github repository:
+
+* https://github.com/jjrozewicki/jbrowse2-plugin-nuccontent
 
 Pull requests that include documentation of improvements/fixes will be considered, but may not be immediately accepted.
 
