@@ -152,22 +152,22 @@ export function stateModelFactory(
     const { MenuItem } = pluginManager.jbrequire("@material-ui/core");
 
     //adapterConfig doesn't have default values due to getSnapshot so we have to guard against that
-    const current_window_size =
+    model.adapterConfig.windowSize =
       model.adapterConfig.windowSize || defaultWindowSize;
     const [window_size, set_window_size] = useState(
-      current_window_size.toString()
+      model.adapterConfig.windowSize.toString()
     );
 
-    const current_window_overlap =
+    model.adapterConfig.windowOverlap =
       model.adapterConfig.windowOverlap || defaultWindowOverlap;
     const [window_overlap, set_window_overlap] = useState(
-      current_window_overlap.toString()
+      model.adapterConfig.windowOverlap.toString()
     );
 
-    const current_calculation_mode =
+    model.adapterConfig.calculationMode =
       model.adapterConfig.calculationMode || defaultCalculationMode;
     const [calculation_mode, set_calculation_mode] = useState(
-      current_calculation_mode
+      model.adapterConfig.calculationMode
     );
 
     return (
@@ -179,6 +179,42 @@ export function stateModelFactory(
           </IconButton>
         </DialogTitle>
         <DialogContent style={{ overflowX: "hidden" }}>
+          <form
+            onSubmit={function(event: React.FormEvent<HTMLFormElement>) {
+              let config_changed = false;
+
+              const new_window_overlap = sanitizeWindowOverlap(window_overlap);
+              if(model.adapterConfig.windowOverlap != new_window_overlap) {
+                model.adapterConfig.windowOverlap = new_window_overlap;
+                config_changed = true;
+              };
+
+              const new_window_size = sanitizeWindowSize(window_size);
+              if(model.adapterConfig.windowSize != new_window_size) {
+                model.adapterConfig.windowSize = new_window_size;
+                config_changed = true;
+              };
+
+              if(model.adapterConfig.calculationMode != calculation_mode) {
+                model.adapterConfig.calculationMode = calculation_mode;
+                config_changed = true;
+              }
+
+              if(config_changed) {
+                model.parentTrack.configuration.setSubschema(
+                  "adapter",
+                  model.adapterConfig
+                );
+              };
+
+              //cancel form submit and squelch "form not connected" error in Chrome
+              event.preventDefault();
+              //Normal close handler
+              handleClose();
+              //Fully prevent form submit and prevent refreshing page
+              return false;
+            }}
+          >
           <div className={classes.root}>
             <Typography>Window size: </Typography>
             <TextField
@@ -230,24 +266,11 @@ export function stateModelFactory(
               variant="contained"
               color="primary"
               type="submit"
-              onClick={() => {
-                model.adapterConfig.windowOverlap = sanitizeWindowOverlap(
-                  window_overlap
-                );
-                model.adapterConfig.windowSize = sanitizeWindowSize(
-                  window_size
-                );
-                model.adapterConfig.calculationMode = calculation_mode;
-                model.parentTrack.configuration.setSubschema(
-                  "adapter",
-                  model.adapterConfig
-                );
-                handleClose();
-              }}
             >
               Submit
             </Button>
           </div>
+          </form>
         </DialogContent>
       </Dialog>
     );

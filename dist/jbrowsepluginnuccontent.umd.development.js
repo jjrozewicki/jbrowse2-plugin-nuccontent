@@ -2505,21 +2505,21 @@
           MenuItem = _pluginManager$jbrequ10.MenuItem; //adapterConfig doesn't have default values due to getSnapshot so we have to guard against that
 
 
-      var current_window_size = model.adapterConfig.windowSize || defaultWindowSize;
+      model.adapterConfig.windowSize = model.adapterConfig.windowSize || defaultWindowSize;
 
-      var _useState = React.useState(current_window_size.toString()),
+      var _useState = React.useState(model.adapterConfig.windowSize.toString()),
           window_size = _useState[0],
           set_window_size = _useState[1];
 
-      var current_window_overlap = model.adapterConfig.windowOverlap || defaultWindowOverlap;
+      model.adapterConfig.windowOverlap = model.adapterConfig.windowOverlap || defaultWindowOverlap;
 
-      var _useState2 = React.useState(current_window_overlap.toString()),
+      var _useState2 = React.useState(model.adapterConfig.windowOverlap.toString()),
           window_overlap = _useState2[0],
           set_window_overlap = _useState2[1];
 
-      var current_calculation_mode = model.adapterConfig.calculationMode || defaultCalculationMode;
+      model.adapterConfig.calculationMode = model.adapterConfig.calculationMode || defaultCalculationMode;
 
-      var _useState3 = React.useState(current_calculation_mode),
+      var _useState3 = React.useState(model.adapterConfig.calculationMode),
           calculation_mode = _useState3[0],
           set_calculation_mode = _useState3[1];
 
@@ -2532,6 +2532,37 @@
       }, React__default.createElement(CloseIcon, null))), React__default.createElement(DialogContent, {
         style: {
           overflowX: "hidden"
+        }
+      }, React__default.createElement("form", {
+        onSubmit: function onSubmit(event) {
+          var config_changed = false;
+          var new_window_overlap = sanitizeWindowOverlap(window_overlap);
+
+          if (model.adapterConfig.windowOverlap != new_window_overlap) {
+            model.adapterConfig.windowOverlap = new_window_overlap;
+            config_changed = true;
+          }
+          var new_window_size = sanitizeWindowSize(window_size);
+
+          if (model.adapterConfig.windowSize != new_window_size) {
+            model.adapterConfig.windowSize = new_window_size;
+            config_changed = true;
+          }
+
+          if (model.adapterConfig.calculationMode != calculation_mode) {
+            model.adapterConfig.calculationMode = calculation_mode;
+            config_changed = true;
+          }
+
+          if (config_changed) {
+            model.parentTrack.configuration.setSubschema("adapter", model.adapterConfig);
+          }
+
+          event.preventDefault(); //Normal close handler
+
+          handleClose(); //Fully prevent form submit and prevent refreshing page
+
+          return false;
         }
       }, React__default.createElement("div", {
         className: classes.root
@@ -2584,15 +2615,8 @@
       }), React__default.createElement(Button, {
         variant: "contained",
         color: "primary",
-        type: "submit",
-        onClick: function onClick() {
-          model.adapterConfig.windowOverlap = sanitizeWindowOverlap(window_overlap);
-          model.adapterConfig.windowSize = sanitizeWindowSize(window_size);
-          model.adapterConfig.calculationMode = calculation_mode;
-          model.parentTrack.configuration.setSubschema("adapter", model.adapterConfig);
-          handleClose();
-        }
-      }, "Submit"))));
+        type: "submit"
+      }, "Submit")))));
     }
   }
 
