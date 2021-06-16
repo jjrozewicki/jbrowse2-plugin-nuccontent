@@ -218,6 +218,7 @@ export function stateModelFactory(
           <div className={classes.root}>
             <Typography>Window size: </Typography>
             <TextField
+              autoFocus
               value={window_size}
               onChange={function(event: Event) {
                 const target = event.target as HTMLInputElement;

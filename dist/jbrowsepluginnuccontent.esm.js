@@ -1349,6 +1349,7 @@ function stateModelFactory(pluginManager, configSchema) {
     }, React.createElement("div", {
       className: classes.root
     }, React.createElement(Typography, null, "Window size: "), React.createElement(TextField, {
+      autoFocus: true,
       value: window_size,
       onChange: function onChange(event) {
         var target = event.target;
