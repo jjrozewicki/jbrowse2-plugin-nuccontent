@@ -226,7 +226,6 @@ export function stateModelFactory(
               </MenuItem>
             </TextField>
             <Divider style={{ marginTop: 5, marginBottom: 5 }} light />
-            //TODO: get this to submit when you hit the enter key
             <Button
               variant="contained"
               color="primary"

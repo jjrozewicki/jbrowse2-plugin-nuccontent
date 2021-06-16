@@ -2581,8 +2581,7 @@
           marginBottom: 5
         },
         light: true
-      }) //TODO: get this to submit when you hit the enter key
-      , "//TODO: get this to submit when you hit the enter key", React__default.createElement(Button, {
+      }), React__default.createElement(Button, {
         variant: "contained",
         color: "primary",
         type: "submit",

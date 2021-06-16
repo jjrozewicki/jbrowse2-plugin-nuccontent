@@ -1363,8 +1363,7 @@ function stateModelFactory(pluginManager, configSchema) {
         marginBottom: 5
       },
       light: true
-    }) //TODO: get this to submit when you hit the enter key
-    , "//TODO: get this to submit when you hit the enter key", React.createElement(Button, {
+    }), React.createElement(Button, {
       variant: "contained",
       color: "primary",
       type: "submit",
