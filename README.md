@@ -18,7 +18,7 @@ Add the appropriate plugin and track settings based on the example below.
 "plugins": [
   {
     "name": "NucContent",
-    "url": "https://unpkg.com/browse/jbrowse2-plugin-nuccontent@latest/dist/jbrowsepluginnuccontent.umd.production.min.js"
+    "url": "https://unpkg.com/jbrowse2-plugin-nuccontent/dist/jbrowsepluginnuccontent.umd.production.min.js"
   }
 }
 ```
