@@ -56,7 +56,7 @@ export default class NucContentPlugin extends Plugin {
         name: "NucContentDisplay",
         configSchema,
         stateModel: nucContentDisplayModelFactory(pluginManager, configSchema),
-        trackType: "FeatureTrack",
+        trackType: "NucContentTrack",
         viewType: "LinearGenomeView",
         ReactComponent: LinearWiggleDisplayReactComponent
       });

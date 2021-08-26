@@ -2669,7 +2669,7 @@
           name: "NucContentDisplay",
           configSchema: configSchema,
           stateModel: stateModelFactory(pluginManager, configSchema),
-          trackType: "FeatureTrack",
+          trackType: "NucContentTrack",
           viewType: "LinearGenomeView",
           ReactComponent: LinearWiggleDisplayReactComponent
         });
