@@ -4,6 +4,7 @@ export declare function configSchemaFactory(pluginManager: PluginManager): impor
 export declare function stateModelFactory(pluginManager: PluginManager, configSchema: any): import("mobx-state-tree").IModelType<{
     id: import("mobx-state-tree").IOptionalIType<import("mobx-state-tree").ISimpleType<string>, [undefined]>;
     type: import("mobx-state-tree").ISimpleType<string>;
+    rpcDriverName: import("mobx-state-tree").IMaybe<import("mobx-state-tree").ISimpleType<string>>;
 } & {
     height: import("mobx-state-tree").IOptionalIType<import("mobx-state-tree").ISimpleType<number>, [undefined]>;
     blockState: import("mobx-state-tree").IMapType<import("mobx-state-tree").IModelType<{
@@ -18,32 +19,34 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
         }, {
             setRefName(newRefName: string): void;
         }, import("mobx-state-tree")._NotCustomized, import("mobx-state-tree")._NotCustomized>;
+        reloadFlag: import("mobx-state-tree").IType<number | undefined, number, number>;
         isLeftEndOfDisplayedRegion: import("mobx-state-tree").IType<boolean | undefined, boolean, boolean>;
         isRightEndOfDisplayedRegion: import("mobx-state-tree").IType<boolean | undefined, boolean, boolean>;
     }, {
         renderInProgress: AbortController | undefined;
         filled: boolean;
-        data: any;
-        html: string;
+        reactElement: React.ReactElement<any, string | ((props: any) => React.ReactElement<any, any> | null) | (new (props: any) => React.Component<any, any, any>)> | undefined;
+        features: Map<string, import("@jbrowse/core/util/simpleFeature").Feature> | undefined;
+        layout: any;
         status: string;
         error: Error | undefined;
         message: string | undefined;
         maxHeightReached: boolean;
         ReactComponent: ({ model, }: {
             model: any;
-        }) => JSX.Element;
-        renderingComponent: any;
+        }) => any;
         renderProps: any;
     } & {
+        doReload(): void;
         afterAttach(): void;
         setStatus(message: string): void;
         setLoading(abortController: AbortController): void;
         setMessage(messageText: string): void;
         setRendered(props: {
-            data: any;
-            html: any;
+            reactElement: React.ReactElement<any, string | ((props: any) => React.ReactElement<any, any> | null) | (new (props: any) => React.Component<any, any, any>)>;
+            features: Map<string, import("@jbrowse/core/util/simpleFeature").Feature>;
+            layout: any;
             maxHeightReached: boolean;
-            renderingComponent: React.Component<{}, {}, any>;
             renderProps: any;
         } | undefined): void;
         setError(error: Error): void;
@@ -77,12 +80,14 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
         model: import("mobx-state-tree").ModelInstanceTypeProps<{
             id: import("mobx-state-tree").IOptionalIType<import("mobx-state-tree").ISimpleType<string>, [undefined]>;
             type: import("mobx-state-tree").ISimpleType<string>;
+            rpcDriverName: import("mobx-state-tree").IMaybe<import("mobx-state-tree").ISimpleType<string>>;
         }> & {
             rendererTypeName: string;
             error: Error | undefined;
         } & import("mobx-state-tree").IStateTreeNode<import("mobx-state-tree").IModelType<{
             id: import("mobx-state-tree").IOptionalIType<import("mobx-state-tree").ISimpleType<string>, [undefined]>;
             type: import("mobx-state-tree").ISimpleType<string>;
+            rpcDriverName: import("mobx-state-tree").IMaybe<import("mobx-state-tree").ISimpleType<string>>;
         }, {
             rendererTypeName: string;
             error: Error | undefined;
@@ -94,12 +99,14 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
         model: import("mobx-state-tree").ModelInstanceTypeProps<{
             id: import("mobx-state-tree").IOptionalIType<import("mobx-state-tree").ISimpleType<string>, [undefined]>;
             type: import("mobx-state-tree").ISimpleType<string>;
+            rpcDriverName: import("mobx-state-tree").IMaybe<import("mobx-state-tree").ISimpleType<string>>;
         }> & {
             rendererTypeName: string;
             error: Error | undefined;
         } & import("mobx-state-tree").IStateTreeNode<import("mobx-state-tree").IModelType<{
             id: import("mobx-state-tree").IOptionalIType<import("mobx-state-tree").ISimpleType<string>, [undefined]>;
             type: import("mobx-state-tree").ISimpleType<string>;
+            rpcDriverName: import("mobx-state-tree").IMaybe<import("mobx-state-tree").ISimpleType<string>>;
         }, {
             rendererTypeName: string;
             error: Error | undefined;
@@ -115,6 +122,7 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
     regionCannotBeRendered(): undefined;
 } & {
     setError(error?: Error | undefined): void;
+    setRpcDriverName(rpcDriverName: string): void;
     reload(): void;
 } & {
     message: string;
@@ -123,20 +131,19 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
     additionalContextMenuItemCallbacks: Function[];
     scrollTop: number;
 } & {
-    readonly maxViewBpPerPx: any;
     readonly blockType: "staticBlocks" | "dynamicBlocks";
+    readonly blockDefinitions: import("@jbrowse/core/util/blockTypes").BlockSet;
+} & {
+    readonly maxViewBpPerPx: any;
     readonly renderDelay: number;
     readonly TooltipComponent: React.FC<any>;
-    readonly blockDefinitions: import("@jbrowse/core/util/blockTypes").BlockSet;
     readonly selectedFeatureId: string | undefined;
     readonly DisplayMessageComponent: React.FC<any> | undefined;
 } & {
     readonly features: import("@jbrowse/core/util/compositeMap").default<string, import("@jbrowse/core/util/simpleFeature").Feature>;
     readonly featureUnderMouse: import("@jbrowse/core/util/simpleFeature").Feature | undefined;
-    readonly blockLayoutFeatures: Map<string, Map<string, [number, number, number, number]>>;
-    readonly layoutFeatures: import("@jbrowse/core/util/compositeMap").default<string, [number, number, number, number]>;
-    readonly rtree: Record<string, any>;
-    getFeatureOverlapping(blockKey: string, x: number, y: number): import("@jbrowse/plugin-linear-genome-view/dist/BaseLinearDisplay/models/BaseLinearDisplayModel").Layout[];
+    getFeatureOverlapping(blockKey: string, x: number, y: number): any;
+    getFeatureByID(id: string): [number, number, number, number] | undefined;
 } & {
     afterAttach(): void;
     setHeight(displayHeight: number): number;
@@ -153,7 +160,8 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
     addAdditionalContextMenuItemCallback(callback: Function): void;
     setContextMenuFeature(feature?: import("@jbrowse/core/util/simpleFeature").Feature | undefined): void;
 } & {
-    regionCannotBeRendered(): JSX.Element | undefined;
+    regionCannotBeRenderedText(_region: import("@jbrowse/core/util").Region): "" | "Zoom in to see features";
+    regionCannotBeRendered(_region: import("@jbrowse/core/util").Region): JSX.Element | undefined;
     readonly trackMenuItems: import("@jbrowse/core/ui").MenuItem[];
     readonly composedTrackMenuItems: import("@jbrowse/core/ui").MenuItem[];
     readonly contextMenuItems: {
@@ -163,6 +171,10 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
     }[];
     readonly composedRenderProps: any;
     readonly renderProps: any;
+} & {
+    renderSvg(opts: import("@jbrowse/plugin-linear-genome-view/dist/LinearGenomeView").ExportSvgOptions & {
+        overrideHeight: number;
+    }): Promise<JSX.Element>;
 } & {
     ready: boolean;
     message: string | undefined;
@@ -179,12 +191,14 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
     setResolution(res: number): void;
     setFill(fill: boolean): void;
     toggleLogScale(): void;
+    setScaleType(scale?: string | undefined): void;
     setSummaryScoreMode(val: string): void;
     setAutoscale(val: string): void;
     setMaxScore(val?: number | undefined): void;
     setRendererType(val: string): void;
     setMinScore(val?: number | undefined): void;
     toggleCrossHatches(): void;
+    setCrossHatches(cross: boolean): void;
 } & {
     readonly TooltipComponent: React.FC<{}>;
     readonly adapterTypeName: any;
@@ -212,8 +226,9 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
 } & {
     readonly ticks: any;
     readonly renderProps: any;
-    readonly hasResolution: any;
-    readonly hasGlobalStats: any;
+    readonly adapterCapabilities: string[];
+    readonly hasResolution: boolean;
+    readonly hasGlobalStats: boolean;
     readonly composedTrackMenuItems: ({
         label: string;
         subMenu: {
@@ -261,8 +276,11 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
 } & {
     reload(): Promise<void>;
     afterAttach(): void;
+    renderSvg(opts: import("@jbrowse/plugin-linear-genome-view/dist/LinearGenomeView").ExportSvgOptions & {
+        overrideHeight: number;
+    }): Promise<JSX.Element>;
 } & {
-    readonly trackMenuItems: (import("@jbrowse/core/ui").MenuDivider | import("@jbrowse/core/ui").MenuSubHeader | import("@jbrowse/core/ui").NormalMenuItem | import("@jbrowse/core/ui").CheckboxMenuItem | import("@jbrowse/core/ui").RadioMenuItem | import("@jbrowse/core/ui").SubMenuItem | {
+    trackMenuItems(): (import("@jbrowse/core/ui").MenuDivider | import("@jbrowse/core/ui").MenuSubHeader | import("@jbrowse/core/ui").NormalMenuItem | import("@jbrowse/core/ui").CheckboxMenuItem | import("@jbrowse/core/ui").RadioMenuItem | import("@jbrowse/core/ui").SubMenuItem | {
         label: string;
         subMenu: {
             label: string;

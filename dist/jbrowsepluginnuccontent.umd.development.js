@@ -255,9 +255,9 @@
     // This is a polyfill for %IteratorPrototype% for environments that
     // don't natively support it.
     var IteratorPrototype = {};
-    IteratorPrototype[iteratorSymbol] = function () {
+    define(IteratorPrototype, iteratorSymbol, function () {
       return this;
-    };
+    });
 
     var getProto = Object.getPrototypeOf;
     var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
@@ -271,8 +271,9 @@
 
     var Gp = GeneratorFunctionPrototype.prototype =
       Generator.prototype = Object.create(IteratorPrototype);
-    GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
-    GeneratorFunctionPrototype.constructor = GeneratorFunction;
+    GeneratorFunction.prototype = GeneratorFunctionPrototype;
+    define(Gp, "constructor", GeneratorFunctionPrototype);
+    define(GeneratorFunctionPrototype, "constructor", GeneratorFunction);
     GeneratorFunction.displayName = define(
       GeneratorFunctionPrototype,
       toStringTagSymbol,
@@ -386,9 +387,9 @@
     }
 
     defineIteratorMethods(AsyncIterator.prototype);
-    AsyncIterator.prototype[asyncIteratorSymbol] = function () {
+    define(AsyncIterator.prototype, asyncIteratorSymbol, function () {
       return this;
-    };
+    });
     exports.AsyncIterator = AsyncIterator;
 
     // Note that simple async functions are implemented on top of
@@ -581,13 +582,13 @@
     // iterator prototype chain incorrectly implement this, causing the Generator
     // object to not be returned from this call. This ensures that doesn't happen.
     // See https://github.com/facebook/regenerator/issues/274 for more details.
-    Gp[iteratorSymbol] = function() {
+    define(Gp, iteratorSymbol, function() {
       return this;
-    };
+    });
 
-    Gp.toString = function() {
+    define(Gp, "toString", function() {
       return "[object Generator]";
-    };
+    });
 
     function pushTryEntry(locs) {
       var entry = { tryLoc: locs[0] };
@@ -906,14 +907,19 @@
   } catch (accidentalStrictMode) {
     // This module should not be running in strict mode, so the above
     // assignment should always work unless something is misconfigured. Just
-    // in case runtime.js accidentally runs in strict mode, we can escape
+    // in case runtime.js accidentally runs in strict mode, in modern engines
+    // we can explicitly access globalThis. In older engines we can escape
     // strict mode using a global Function call. This could conceivably fail
     // if a Content Security Policy forbids using Function, but in that case
     // the proper solution is to fix the accidental strict mode problem. If
     // you've misconfigured your bundler to force strict mode and applied a
     // CSP to forbid Function, and you're not willing to fix either of those
     // problems, please detail your unique predicament in a GitHub issue.
-    Function("r", "regeneratorRuntime = r")(runtime);
+    if (typeof globalThis === "object") {
+      globalThis.regeneratorRuntime = runtime;
+    } else {
+      Function("r", "regeneratorRuntime = r")(runtime);
+    }
   }
   });
 
@@ -1033,7 +1039,7 @@
 
   var _typeof2 = interopRequireDefault(_typeof_1);
 
-  function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+  function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
   function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
@@ -1062,8 +1068,11 @@
      * which will be inflated to more instances of this class.
      */
     function SimpleFeature(args) {
+      var _this = this;
+
       (0, _classCallCheck2.default)(this, SimpleFeature);
       (0, _defineProperty2.default)(this, "data", void 0);
+      (0, _defineProperty2.default)(this, "subfeatures", void 0);
       (0, _defineProperty2.default)(this, "parentHandle", void 0);
       (0, _defineProperty2.default)(this, "uniqueId", void 0);
 
@@ -1089,23 +1098,21 @@
 
       if (!(this.data.aliases || this.data.end - this.data.start >= 0)) {
         throw new Error("invalid feature data, end less than start. end: ".concat(this.data.end, " start: ").concat(this.data.start));
-      } // inflate any subfeatures that are not already feature objects
+      }
 
+      if (this.data.subfeatures) {
+        var _this$data$subfeature;
 
-      var subfeatures = this.data.subfeatures;
-
-      if (subfeatures) {
-        for (var i = 0; i < subfeatures.length; i += 1) {
-          if (typeof subfeatures[i].get !== 'function') {
-            subfeatures[i].strand = subfeatures[i].strand || this.data.strand;
-            subfeatures[i] = new SimpleFeature({
-              id: subfeatures[i].uniqueId || "".concat(id, "-").concat(i),
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              data: subfeatures[i],
-              parent: this
-            });
-          }
-        }
+        this.subfeatures = (_this$data$subfeature = this.data.subfeatures) === null || _this$data$subfeature === void 0 ? void 0 : _this$data$subfeature.map( // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        function (f, i) {
+          return typeof f.get !== 'function' ? new SimpleFeature({
+            id: f.uniqueId || "".concat(id, "-").concat(i),
+            data: _objectSpread({
+              strand: _this.data.strand
+            }, f),
+            parent: _this
+          }) : f;
+        });
       }
     }
     /**
@@ -1118,7 +1125,7 @@
     (0, _createClass2.default)(SimpleFeature, [{
       key: "get",
       value: function get(name) {
-        return this.data[name];
+        return name === 'subfeatures' ? this.subfeatures : this.data[name];
       }
       /**
        * Set an item of data.
@@ -1174,11 +1181,19 @@
         });
 
         var p = this.parent();
-        if (p) d.parentId = p.id();
+
+        if (p) {
+          d.parentId = p.id();
+        }
+
         var c = this.children();
-        if (c) d.subfeatures = c.map(function (child) {
-          return child.toJSON();
-        });
+
+        if (c) {
+          d.subfeatures = c.map(function (child) {
+            return child.toJSON();
+          });
+        }
+
         return d;
       }
     }], [{
@@ -2273,9 +2288,7 @@
      */
     ;
 
-    _proto.freeResources = function freeResources()
-    /* { region } */
-    {};
+    _proto.freeResources = function freeResources() {};
 
     return default_1;
   }(BaseAdapter.BaseFeatureDataAdapter);
@@ -2291,19 +2304,17 @@
   var interopRequireWildcard = createCommonjsModule(function (module) {
   var _typeof = _typeof_1["default"];
 
-  function _getRequireWildcardCache() {
+  function _getRequireWildcardCache(nodeInterop) {
     if (typeof WeakMap !== "function") return null;
-    var cache = new WeakMap();
-
-    _getRequireWildcardCache = function _getRequireWildcardCache() {
-      return cache;
-    };
-
-    return cache;
+    var cacheBabelInterop = new WeakMap();
+    var cacheNodeInterop = new WeakMap();
+    return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) {
+      return nodeInterop ? cacheNodeInterop : cacheBabelInterop;
+    })(nodeInterop);
   }
 
-  function _interopRequireWildcard(obj) {
-    if (obj && obj.__esModule) {
+  function _interopRequireWildcard(obj, nodeInterop) {
+    if (!nodeInterop && obj && obj.__esModule) {
       return obj;
     }
 
@@ -2313,7 +2324,7 @@
       };
     }
 
-    var cache = _getRequireWildcardCache();
+    var cache = _getRequireWildcardCache(nodeInterop);
 
     if (cache && cache.has(obj)) {
       return cache.get(obj);
@@ -2323,7 +2334,7 @@
     var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor;
 
     for (var key in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) {
         var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null;
 
         if (desc && (desc.get || desc.set)) {
@@ -2441,9 +2452,9 @@
     return mobxStateTree.types.compose("NucContentDisplay", linearWiggleDisplayModelFactory(pluginManager, configSchema), mobxStateTree.types.model({
       type: mobxStateTree.types.literal("NucContentDisplay")
     })).views(function (self) {
-      var composedTrackMenuItems = self.composedTrackMenuItems;
+      var superTrackMenuItems = self.trackMenuItems;
       return {
-        get trackMenuItems() {
+        trackMenuItems: function trackMenuItems() {
           var new_menu_items = [{
             label: "NucContent settings",
             onClick: function onClick() {
@@ -2453,9 +2464,8 @@
               });
             }
           }];
-          return [].concat(composedTrackMenuItems, new_menu_items);
+          return [].concat(superTrackMenuItems, new_menu_items);
         }
-
       };
     });
 

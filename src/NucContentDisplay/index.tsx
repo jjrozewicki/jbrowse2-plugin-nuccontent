@@ -98,9 +98,9 @@ export function stateModelFactory(
       })
     )
     .views(self => {
-      const { composedTrackMenuItems } = self;
+      const { trackMenuItems: superTrackMenuItems } = self;
       return {
-        get trackMenuItems() {
+        trackMenuItems() {
           const new_menu_items = [
             {
               label: "NucContent settings",
@@ -112,7 +112,7 @@ export function stateModelFactory(
               }
             }
           ];
-          return [...composedTrackMenuItems, ...new_menu_items];
+          return [...superTrackMenuItems, ...new_menu_items];
         }
       };
     });

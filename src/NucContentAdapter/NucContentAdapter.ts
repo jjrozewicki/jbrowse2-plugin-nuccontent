@@ -29,9 +29,9 @@ function escapeRegExp(str: string) {
 }
 
 export default class extends BaseFeatureDataAdapter {
-  private config: AnyConfigurationModel;
+  config: AnyConfigurationModel;
 
-  private getSubAdapter?: getSubAdapterType;
+  getSubAdapter?: getSubAdapterType;
 
   public static capabilities = ["hasLocalStats"];
 
