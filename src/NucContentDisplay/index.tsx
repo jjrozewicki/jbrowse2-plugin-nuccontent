@@ -105,14 +105,14 @@ export function stateModelFactory(
             {
               label: "NucContent settings",
               onClick: () => {
-                //@ts-ignore
-                getSession(self).setDialogComponent(SetWindowDlg, {
-                  model: self
-                });
+                getSession(self).queueDialog((doneCallback: Function) => [
+                  SetWindowDlg,
+                  { model: self, handleClose: doneCallback },
+                ])
               }
             }
           ];
-          return [...superTrackMenuItems, ...new_menu_items];
+          return [...superTrackMenuItems(), ...new_menu_items];
         }
       };
     });

@@ -29,7 +29,7 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
         features: Map<string, import("@jbrowse/core/util/simpleFeature").Feature> | undefined;
         layout: any;
         status: string;
-        error: Error | undefined;
+        error: unknown;
         message: string | undefined;
         maxHeightReached: boolean;
         ReactComponent: ({ model, }: {
@@ -49,7 +49,7 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
             maxHeightReached: boolean;
             renderProps: any;
         } | undefined): void;
-        setError(error: Error): void;
+        setError(error: unknown): void;
         reload(): void;
         beforeDestroy(): void;
     }, import("mobx-state-tree")._NotCustomized, import("mobx-state-tree")._NotCustomized>>;
@@ -74,61 +74,60 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
     type: import("mobx-state-tree").ISimpleType<"NucContentDisplay">;
 }, {
     rendererTypeName: string;
-    error: Error | undefined;
+    error: unknown;
 } & {
     readonly RenderingComponent: React.FC<{
-        model: import("mobx-state-tree").ModelInstanceTypeProps<{
-            id: import("mobx-state-tree").IOptionalIType<import("mobx-state-tree").ISimpleType<string>, [undefined]>;
-            type: import("mobx-state-tree").ISimpleType<string>;
-            rpcDriverName: import("mobx-state-tree").IMaybe<import("mobx-state-tree").ISimpleType<string>>;
-        }> & {
+        model: {
+            id: string;
+            type: string;
+            rpcDriverName: string | undefined;
+        } & import("mobx-state-tree/dist/internal").NonEmptyObject & {
             rendererTypeName: string;
-            error: Error | undefined;
+            error: unknown;
         } & import("mobx-state-tree").IStateTreeNode<import("mobx-state-tree").IModelType<{
             id: import("mobx-state-tree").IOptionalIType<import("mobx-state-tree").ISimpleType<string>, [undefined]>;
             type: import("mobx-state-tree").ISimpleType<string>;
             rpcDriverName: import("mobx-state-tree").IMaybe<import("mobx-state-tree").ISimpleType<string>>;
         }, {
             rendererTypeName: string;
-            error: Error | undefined;
+            error: unknown;
         }, import("mobx-state-tree")._NotCustomized, import("mobx-state-tree")._NotCustomized>>;
         onHorizontalScroll?: Function | undefined;
         blockState?: Record<string, any> | undefined;
     }>;
     readonly DisplayBlurb: React.FC<{
-        model: import("mobx-state-tree").ModelInstanceTypeProps<{
-            id: import("mobx-state-tree").IOptionalIType<import("mobx-state-tree").ISimpleType<string>, [undefined]>;
-            type: import("mobx-state-tree").ISimpleType<string>;
-            rpcDriverName: import("mobx-state-tree").IMaybe<import("mobx-state-tree").ISimpleType<string>>;
-        }> & {
+        model: {
+            id: string;
+            type: string;
+            rpcDriverName: string | undefined;
+        } & import("mobx-state-tree/dist/internal").NonEmptyObject & {
             rendererTypeName: string;
-            error: Error | undefined;
+            error: unknown;
         } & import("mobx-state-tree").IStateTreeNode<import("mobx-state-tree").IModelType<{
             id: import("mobx-state-tree").IOptionalIType<import("mobx-state-tree").ISimpleType<string>, [undefined]>;
             type: import("mobx-state-tree").ISimpleType<string>;
             rpcDriverName: import("mobx-state-tree").IMaybe<import("mobx-state-tree").ISimpleType<string>>;
         }, {
             rendererTypeName: string;
-            error: Error | undefined;
+            error: unknown;
         }, import("mobx-state-tree")._NotCustomized, import("mobx-state-tree")._NotCustomized>>;
     }> | null;
     readonly adapterConfig: any;
     readonly parentTrack: any;
-    readonly renderProps: any;
+    renderProps(): any;
     readonly rendererType: any;
     readonly DisplayMessageComponent: React.FC<any> | undefined;
-    readonly trackMenuItems: import("@jbrowse/core/ui").MenuItem[];
+    trackMenuItems(): import("@jbrowse/core/ui").MenuItem[];
     readonly viewMenuActions: import("@jbrowse/core/ui").MenuItem[];
     regionCannotBeRendered(): undefined;
 } & {
-    setError(error?: Error | undefined): void;
+    setError(error?: unknown): void;
     setRpcDriverName(rpcDriverName: string): void;
     reload(): void;
 } & {
     message: string;
     featureIdUnderMouse: string | undefined;
     contextMenuFeature: import("@jbrowse/core/util/simpleFeature").Feature | undefined;
-    additionalContextMenuItemCallbacks: Function[];
     scrollTop: number;
 } & {
     readonly blockType: "staticBlocks" | "dynamicBlocks";
@@ -143,7 +142,8 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
     readonly features: import("@jbrowse/core/util/compositeMap").default<string, import("@jbrowse/core/util/simpleFeature").Feature>;
     readonly featureUnderMouse: import("@jbrowse/core/util/simpleFeature").Feature | undefined;
     getFeatureOverlapping(blockKey: string, x: number, y: number): any;
-    getFeatureByID(id: string): [number, number, number, number] | undefined;
+    getFeatureByID(blockKey: string, id: string): [number, number, number, number] | undefined;
+    searchFeatureByID(id: string): [number, number, number, number] | undefined;
 } & {
     afterAttach(): void;
     setHeight(displayHeight: number): number;
@@ -157,20 +157,17 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
     clearFeatureSelection(): void;
     setFeatureIdUnderMouse(feature: string | undefined): void;
     reload(): void;
-    addAdditionalContextMenuItemCallback(callback: Function): void;
     setContextMenuFeature(feature?: import("@jbrowse/core/util/simpleFeature").Feature | undefined): void;
 } & {
     regionCannotBeRenderedText(_region: import("@jbrowse/core/util").Region): "" | "Zoom in to see features";
     regionCannotBeRendered(_region: import("@jbrowse/core/util").Region): JSX.Element | undefined;
-    readonly trackMenuItems: import("@jbrowse/core/ui").MenuItem[];
-    readonly composedTrackMenuItems: import("@jbrowse/core/ui").MenuItem[];
-    readonly contextMenuItems: {
+    trackMenuItems(): import("@jbrowse/core/ui").MenuItem[];
+    contextMenuItems(): {
         label: string;
-        icon: import("@material-ui/core/OverridableComponent").OverridableComponent<import("@material-ui/core").SvgIconTypeMap<{}, "svg">>;
+        icon: any;
         onClick: () => void;
     }[];
-    readonly composedRenderProps: any;
-    readonly renderProps: any;
+    renderProps(): any;
 } & {
     renderSvg(opts: import("@jbrowse/plugin-linear-genome-view/dist/LinearGenomeView").ExportSvgOptions & {
         overrideHeight: number;
@@ -225,53 +222,17 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
     readonly displayCrossHatchesSetting: any;
 } & {
     readonly ticks: any;
-    readonly renderProps: any;
+} & {
+    renderProps(): any;
     readonly adapterCapabilities: string[];
     readonly hasResolution: boolean;
     readonly hasGlobalStats: boolean;
-    readonly composedTrackMenuItems: ({
-        label: string;
-        subMenu: {
-            label: string;
-            onClick: () => void;
-        }[];
-        onClick?: undefined;
-        type?: undefined;
-        checked?: undefined;
-    } | {
-        label: string;
-        onClick: () => void;
-        subMenu?: undefined;
-        type?: undefined;
-        checked?: undefined;
-    } | {
+} & {
+    trackMenuItems(): (import("@jbrowse/core/ui").MenuDivider | import("@jbrowse/core/ui").MenuSubHeader | import("@jbrowse/core/ui").NormalMenuItem | import("@jbrowse/core/ui").CheckboxMenuItem | import("@jbrowse/core/ui").RadioMenuItem | import("@jbrowse/core/ui").SubMenuItem | {
         type: string;
         label: string;
         checked: any;
         onClick: () => void;
-        subMenu?: undefined;
-    })[];
-    readonly trackMenuItems: (import("@jbrowse/core/ui").MenuDivider | import("@jbrowse/core/ui").MenuSubHeader | import("@jbrowse/core/ui").NormalMenuItem | import("@jbrowse/core/ui").CheckboxMenuItem | import("@jbrowse/core/ui").RadioMenuItem | import("@jbrowse/core/ui").SubMenuItem | {
-        label: string;
-        subMenu: {
-            label: string;
-            onClick: () => void;
-        }[];
-        onClick?: undefined;
-        type?: undefined;
-        checked?: undefined;
-    } | {
-        label: string;
-        onClick: () => void;
-        subMenu?: undefined;
-        type?: undefined;
-        checked?: undefined;
-    } | {
-        type: string;
-        label: string;
-        checked: any;
-        onClick: () => void;
-        subMenu?: undefined;
     })[];
 } & {
     reload(): Promise<void>;
@@ -281,15 +242,6 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
     }): Promise<JSX.Element>;
 } & {
     trackMenuItems(): (import("@jbrowse/core/ui").MenuDivider | import("@jbrowse/core/ui").MenuSubHeader | import("@jbrowse/core/ui").NormalMenuItem | import("@jbrowse/core/ui").CheckboxMenuItem | import("@jbrowse/core/ui").RadioMenuItem | import("@jbrowse/core/ui").SubMenuItem | {
-        label: string;
-        subMenu: {
-            label: string;
-            onClick: () => void;
-        }[];
-        onClick?: undefined;
-        type?: undefined;
-        checked?: undefined;
-    } | {
         label: string;
         onClick: () => void;
     })[];

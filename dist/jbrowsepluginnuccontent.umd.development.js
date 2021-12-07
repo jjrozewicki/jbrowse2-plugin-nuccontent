@@ -2288,7 +2288,9 @@
      */
     ;
 
-    _proto.freeResources = function freeResources() {};
+    _proto.freeResources = function
+      /* { region } */
+    freeResources() {};
 
     return default_1;
   }(BaseAdapter.BaseFeatureDataAdapter);
@@ -2458,13 +2460,15 @@
           var new_menu_items = [{
             label: "NucContent settings",
             onClick: function onClick() {
-              //@ts-ignore
-              util.getSession(self).setDialogComponent(SetWindowDlg, {
-                model: self
+              util.getSession(self).queueDialog(function (doneCallback) {
+                return [SetWindowDlg, {
+                  model: self,
+                  handleClose: doneCallback
+                }];
               });
             }
           }];
-          return [].concat(superTrackMenuItems, new_menu_items);
+          return [].concat(superTrackMenuItems(), new_menu_items);
         }
       };
     });
