@@ -1,16 +1,16 @@
 {
   "name": "jbrowse2-plugin-nuccontent",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "JBrowse 2 statistics sequence adapter",
   "keywords": [
     "jbrowse",
     "jbrowse2"
   ],
   "license": "Apache-2.0",
-  "bugs": "https://github.com/GMOD/jbrowse-components/issues",
+  "bugs": "https://github.com/jjrozewicki/jbrowse2-plugin-nuccontent/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/GMOD/jbrowse-components.git"
+    "url": "https://github.com/jjrozewicki/jbrowse2-plugin-nuccontent.git"
   },
   "author": "John Rozewicki",
   "distMain": "dist/index.js",
