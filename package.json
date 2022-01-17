@@ -1,6 +1,6 @@
 {
   "name": "jbrowse2-plugin-nuccontent",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "JBrowse 2 statistics sequence adapter",
   "keywords": [
     "jbrowse",
@@ -29,10 +29,11 @@
     "tsdx": "^0.14.1"
   },
   "dependencies": {
-    "@jbrowse/core": "^1.5.1",
-    "@jbrowse/development-tools": "^1.5.1",
-    "@jbrowse/plugin-linear-genome-view": "^1.5.1",
-    "@jbrowse/plugin-wiggle": "^1.5.1",
+    "@jbrowse/cli": "^1.5.9",
+    "@jbrowse/core": "^1.5.9",
+    "@jbrowse/development-tools": "^1.5.9",
+    "@jbrowse/plugin-linear-genome-view": "^1.5.9",
+    "@jbrowse/plugin-wiggle": "^1.5.9",
     "@types/react": "^17.0.37",
     "mobx-state-tree": "^5.1.0",
     "react": "^17.0.2",

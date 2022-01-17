@@ -167,6 +167,10 @@
   	return module = { exports: {} }, fn(module, module.exports), module.exports;
   }
 
+  function getCjsExportFromNamespace (n) {
+  	return n && n['default'] || n;
+  }
+
   var runtime_1 = createCommonjsModule(function (module) {
   /**
    * Copyright (c) 2014-present, Facebook, Inc.
@@ -930,49 +934,11 @@
     };
   }
 
-  module.exports = _interopRequireDefault;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
+  module.exports = _interopRequireDefault, module.exports.__esModule = true, module.exports["default"] = module.exports;
   });
 
   unwrapExports(interopRequireDefault);
 
-  var classCallCheck = createCommonjsModule(function (module) {
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  module.exports = _classCallCheck;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-  });
-
-  unwrapExports(classCallCheck);
-
-  var createClass = createCommonjsModule(function (module) {
-  function _defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  function _createClass(Constructor, protoProps, staticProps) {
-    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) _defineProperties(Constructor, staticProps);
-    return Constructor;
-  }
-
-  module.exports = _createClass;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-  });
-
-  unwrapExports(createClass);
-
-  var defineProperty = createCommonjsModule(function (module) {
   function _defineProperty(obj, key, value) {
     if (key in obj) {
       Object.defineProperty(obj, key, {
@@ -988,70 +954,122 @@
     return obj;
   }
 
-  module.exports = _defineProperty;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-  });
+  function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
 
-  unwrapExports(defineProperty);
+    if (Object.getOwnPropertySymbols) {
+      var symbols = Object.getOwnPropertySymbols(object);
+      enumerableOnly && (symbols = symbols.filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+      })), keys.push.apply(keys, symbols);
+    }
 
-  var _typeof_1 = createCommonjsModule(function (module) {
+    return keys;
+  }
+
+  function _objectSpread2(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = null != arguments[i] ? arguments[i] : {};
+      i % 2 ? ownKeys(Object(source), !0).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+
+    return target;
+  }
+
+  var objectSpread2 = {
+    __proto__: null,
+    'default': _objectSpread2
+  };
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  var classCallCheck = {
+    __proto__: null,
+    'default': _classCallCheck
+  };
+
+  function _defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  function _createClass(Constructor, protoProps, staticProps) {
+    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) _defineProperties(Constructor, staticProps);
+    Object.defineProperty(Constructor, "prototype", {
+      writable: false
+    });
+    return Constructor;
+  }
+
+  var createClass = {
+    __proto__: null,
+    'default': _createClass
+  };
+
   function _typeof(obj) {
     "@babel/helpers - typeof";
 
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-      module.exports = _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-
-      module.exports["default"] = module.exports, module.exports.__esModule = true;
-    } else {
-      module.exports = _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-      };
-
-      module.exports["default"] = module.exports, module.exports.__esModule = true;
-    }
-
-    return _typeof(obj);
+    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+      return typeof obj;
+    } : function (obj) {
+      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    }, _typeof(obj);
   }
 
-  module.exports = _typeof;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
-  });
+  var _typeof$1 = {
+    __proto__: null,
+    'default': _typeof
+  };
 
-  unwrapExports(_typeof_1);
+  var require$$1 = getCjsExportFromNamespace(objectSpread2);
+
+  var require$$2 = getCjsExportFromNamespace(classCallCheck);
+
+  var require$$3 = getCjsExportFromNamespace(createClass);
+
+  var require$$4 = getCjsExportFromNamespace(_typeof$1);
 
   var simpleFeature = createCommonjsModule(function (module, exports) {
 
-
+  var _interopRequireDefault = interopRequireDefault["default"];
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
+  exports["default"] = void 0;
   exports.isFeature = isFeature;
-  exports.default = void 0;
 
-  var _classCallCheck2 = interopRequireDefault(classCallCheck);
+  var _objectSpread2 = _interopRequireDefault(require$$1);
 
-  var _createClass2 = interopRequireDefault(createClass);
+  var _classCallCheck2 = _interopRequireDefault(require$$2);
 
-  var _defineProperty2 = interopRequireDefault(defineProperty);
+  var _createClass2 = _interopRequireDefault(require$$3);
 
-  var _typeof2 = interopRequireDefault(_typeof_1);
-
-  function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
-
-  function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+  var _typeof2 = _interopRequireDefault(require$$4);
 
   /**
    * Abstract feature object
    */
   function isFeature(thing) {
-    return (0, _typeof2.default)(thing) === 'object' && thing !== null && typeof thing.get === 'function' && typeof thing.id === 'function';
+    return (0, _typeof2["default"])(thing) === 'object' && thing !== null && typeof thing.get === 'function' && typeof thing.id === 'function';
   }
 
   function isSimpleFeatureSerialized(args) {
-    return 'uniqueId' in args && (0, _typeof2.default)(args.data) !== 'object';
+    return 'uniqueId' in args && (0, _typeof2["default"])(args.data) !== 'object';
   }
   /**
    * Simple implementation of a feature object.
@@ -1070,11 +1088,11 @@
     function SimpleFeature(args) {
       var _this = this;
 
-      (0, _classCallCheck2.default)(this, SimpleFeature);
-      (0, _defineProperty2.default)(this, "data", void 0);
-      (0, _defineProperty2.default)(this, "subfeatures", void 0);
-      (0, _defineProperty2.default)(this, "parentHandle", void 0);
-      (0, _defineProperty2.default)(this, "uniqueId", void 0);
+      (0, _classCallCheck2["default"])(this, SimpleFeature);
+      this.data = void 0;
+      this.subfeatures = void 0;
+      this.parentHandle = void 0;
+      this.uniqueId = void 0;
 
       if (isSimpleFeatureSerialized(args)) {
         this.data = args;
@@ -1107,7 +1125,7 @@
         function (f, i) {
           return typeof f.get !== 'function' ? new SimpleFeature({
             id: f.uniqueId || "".concat(id, "-").concat(i),
-            data: _objectSpread({
+            data: (0, _objectSpread2["default"])({
               strand: _this.data.strand
             }, f),
             parent: _this
@@ -1122,10 +1140,10 @@
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
 
-    (0, _createClass2.default)(SimpleFeature, [{
+    (0, _createClass2["default"])(SimpleFeature, [{
       key: "get",
       value: function get(name) {
-        return name === 'subfeatures' ? this.subfeatures : this.data[name];
+        return name === 'subfeatures' ? this.subfeatures : name === 'parent' ? this.parent() : this.data[name];
       }
       /**
        * Set an item of data.
@@ -1176,10 +1194,9 @@
     }, {
       key: "toJSON",
       value: function toJSON() {
-        var d = _objectSpread(_objectSpread({}, this.data), {}, {
+        var d = (0, _objectSpread2["default"])((0, _objectSpread2["default"])({}, this.data), {}, {
           uniqueId: this.id()
         });
-
         var p = this.parent();
 
         if (p) {
@@ -1199,13 +1216,13 @@
     }], [{
       key: "fromJSON",
       value: function fromJSON(json) {
-        return new SimpleFeature(_objectSpread({}, json));
+        return new SimpleFeature((0, _objectSpread2["default"])({}, json));
       }
     }]);
     return SimpleFeature;
   }();
 
-  exports.default = SimpleFeature;
+  exports["default"] = SimpleFeature;
   });
 
   var SimpleFeature = unwrapExports(simpleFeature);
@@ -2303,6 +2320,22 @@
     };
   });
 
+  var _typeof_1 = createCommonjsModule(function (module) {
+  function _typeof(obj) {
+    "@babel/helpers - typeof";
+
+    return (module.exports = _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+      return typeof obj;
+    } : function (obj) {
+      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    }, module.exports.__esModule = true, module.exports["default"] = module.exports), _typeof(obj);
+  }
+
+  module.exports = _typeof, module.exports.__esModule = true, module.exports["default"] = module.exports;
+  });
+
+  unwrapExports(_typeof_1);
+
   var interopRequireWildcard = createCommonjsModule(function (module) {
   var _typeof = _typeof_1["default"];
 
@@ -2356,8 +2389,7 @@
     return newObj;
   }
 
-  module.exports = _interopRequireWildcard;
-  module.exports["default"] = module.exports, module.exports.__esModule = true;
+  module.exports = _interopRequireWildcard, module.exports.__esModule = true, module.exports["default"] = module.exports;
   });
 
   unwrapExports(interopRequireWildcard);

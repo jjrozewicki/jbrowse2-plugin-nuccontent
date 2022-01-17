@@ -169,7 +169,7 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
     }[];
     renderProps(): any;
 } & {
-    renderSvg(opts: import("@jbrowse/plugin-linear-genome-view/dist/LinearGenomeView").ExportSvgOptions & {
+    renderSvg(opts: import("@jbrowse/plugin-linear-genome-view/src/LinearGenomeView").ExportSvgOptions & {
         overrideHeight: number;
     }): Promise<JSX.Element>;
 } & {
@@ -237,7 +237,7 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
 } & {
     reload(): Promise<void>;
     afterAttach(): void;
-    renderSvg(opts: import("@jbrowse/plugin-linear-genome-view/dist/LinearGenomeView").ExportSvgOptions & {
+    renderSvg(opts: import("@jbrowse/plugin-linear-genome-view/src/LinearGenomeView").ExportSvgOptions & {
         overrideHeight: number;
     }): Promise<JSX.Element>;
 } & {
