@@ -13,10 +13,8 @@
     "url": "https://github.com/jjrozewicki/jbrowse2-plugin-nuccontent.git"
   },
   "author": "John Rozewicki",
-  "distMain": "dist/index.js",
-  "srcMain": "src/index.ts",
-  "main": "src/index.ts",
-  "module": "",
+  "main": "dist/index.js",
+  "module": "dist/jbrowsepluginnuccontent.esm.js",
   "files": [
     "dist",
     "src"
