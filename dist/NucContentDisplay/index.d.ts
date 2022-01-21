@@ -77,11 +77,11 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
     error: unknown;
 } & {
     readonly RenderingComponent: React.FC<{
-        model: {
-            id: string;
-            type: string;
-            rpcDriverName: string | undefined;
-        } & import("mobx-state-tree/dist/internal").NonEmptyObject & {
+        model: import("mobx-state-tree").ModelInstanceTypeProps<{
+            id: import("mobx-state-tree").IOptionalIType<import("mobx-state-tree").ISimpleType<string>, [undefined]>;
+            type: import("mobx-state-tree").ISimpleType<string>;
+            rpcDriverName: import("mobx-state-tree").IMaybe<import("mobx-state-tree").ISimpleType<string>>;
+        }> & {
             rendererTypeName: string;
             error: unknown;
         } & import("mobx-state-tree").IStateTreeNode<import("mobx-state-tree").IModelType<{
@@ -96,11 +96,11 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
         blockState?: Record<string, any> | undefined;
     }>;
     readonly DisplayBlurb: React.FC<{
-        model: {
-            id: string;
-            type: string;
-            rpcDriverName: string | undefined;
-        } & import("mobx-state-tree/dist/internal").NonEmptyObject & {
+        model: import("mobx-state-tree").ModelInstanceTypeProps<{
+            id: import("mobx-state-tree").IOptionalIType<import("mobx-state-tree").ISimpleType<string>, [undefined]>;
+            type: import("mobx-state-tree").ISimpleType<string>;
+            rpcDriverName: import("mobx-state-tree").IMaybe<import("mobx-state-tree").ISimpleType<string>>;
+        }> & {
             rendererTypeName: string;
             error: unknown;
         } & import("mobx-state-tree").IStateTreeNode<import("mobx-state-tree").IModelType<{

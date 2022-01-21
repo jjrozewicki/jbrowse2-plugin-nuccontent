@@ -24,6 +24,7 @@
     "build": "tsdx build --format cjs,esm,umd --name JBrowsePluginNucContent"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.16.11",
     "@jbrowse/core": "^1.4.4",
     "@jbrowse/development-tools": "^1.0.3",
     "@jbrowse/plugin-linear-genome-view": "^1.0.0",

@@ -19,6 +19,32 @@ var React__default = _interopDefault(React);
 var util = require('@jbrowse/core/util');
 var CloseIcon = _interopDefault(require('@material-ui/icons/Close'));
 
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    enumerableOnly && (symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    })), keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread2(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = null != arguments[i] ? arguments[i] : {};
+    i % 2 ? ownKeys(Object(source), !0).forEach(function (key) {
+      _defineProperty(target, key, source[key]);
+    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) {
+      Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+    });
+  }
+
+  return target;
+}
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
   try {
     var info = gen[key](arg);
@@ -55,29 +81,69 @@ function _asyncToGenerator(fn) {
   };
 }
 
-function _extends() {
-  _extends = Object.assign || function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-
-    return target;
-  };
-
-  return _extends.apply(this, arguments);
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
 }
 
-function _inheritsLoose(subClass, superClass) {
-  subClass.prototype = Object.create(superClass.prototype);
-  subClass.prototype.constructor = subClass;
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
 
-  _setPrototypeOf(subClass, superClass);
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  Object.defineProperty(Constructor, "prototype", {
+    writable: false
+  });
+  return Constructor;
+}
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function");
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      writable: true,
+      configurable: true
+    }
+  });
+  Object.defineProperty(subClass, "prototype", {
+    writable: false
+  });
+  if (superClass) _setPrototypeOf(subClass, superClass);
+}
+
+function _getPrototypeOf(o) {
+  _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+    return o.__proto__ || Object.getPrototypeOf(o);
+  };
+  return _getPrototypeOf(o);
 }
 
 function _setPrototypeOf(o, p) {
@@ -87,6 +153,131 @@ function _setPrototypeOf(o, p) {
   };
 
   return _setPrototypeOf(o, p);
+}
+
+function _isNativeReflectConstruct() {
+  if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+  if (Reflect.construct.sham) return false;
+  if (typeof Proxy === "function") return true;
+
+  try {
+    Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function _assertThisInitialized(self) {
+  if (self === void 0) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return self;
+}
+
+function _possibleConstructorReturn(self, call) {
+  if (call && (typeof call === "object" || typeof call === "function")) {
+    return call;
+  } else if (call !== void 0) {
+    throw new TypeError("Derived constructors may only return object or undefined");
+  }
+
+  return _assertThisInitialized(self);
+}
+
+function _createSuper(Derived) {
+  var hasNativeReflectConstruct = _isNativeReflectConstruct();
+
+  return function _createSuperInternal() {
+    var Super = _getPrototypeOf(Derived),
+        result;
+
+    if (hasNativeReflectConstruct) {
+      var NewTarget = _getPrototypeOf(this).constructor;
+
+      result = Reflect.construct(Super, arguments, NewTarget);
+    } else {
+      result = Super.apply(this, arguments);
+    }
+
+    return _possibleConstructorReturn(this, result);
+  };
+}
+
+function _slicedToArray(arr, i) {
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+}
+
+function _toConsumableArray(arr) {
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+}
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+}
+
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+}
+
+function _iterableToArrayLimit(arr, i) {
+  var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
+
+  if (_i == null) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+
+  var _s, _e;
+
+  try {
+    for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+  return arr2;
+}
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 var defaultWindowSize = 1000;
@@ -947,230 +1138,240 @@ function escapeRegExp(str) {
 }
 
 var default_1 = /*#__PURE__*/function (_BaseFeatureDataAdapt) {
-  _inheritsLoose(default_1, _BaseFeatureDataAdapt);
+  _inherits(default_1, _BaseFeatureDataAdapt);
+
+  var _super = /*#__PURE__*/_createSuper(default_1);
 
   function default_1(config, getSubAdapter) {
     var _this;
 
-    _this = _BaseFeatureDataAdapt.call(this, config) || this;
+    _classCallCheck(this, default_1);
+
+    _this = _super.call(this, config);
     _this.config = config;
     _this.getSubAdapter = getSubAdapter;
     return _this;
   }
 
-  var _proto = default_1.prototype;
+  _createClass(default_1, [{
+    key: "configure",
+    value: function () {
+      var _configure = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee() {
+        var _this$getSubAdapter;
 
-  _proto.configure = /*#__PURE__*/function () {
-    var _configure = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee() {
-      var _this$getSubAdapter;
-
-      var sequenceAdapter, dataAdapter;
-      return runtime_1.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              // instantiate the sequence adapter
-              sequenceAdapter = configuration.readConfObject(this.config, "sequenceAdapter");
-              _context.next = 3;
-              return (_this$getSubAdapter = this.getSubAdapter) == null ? void 0 : _this$getSubAdapter.call(this, sequenceAdapter);
-
-            case 3:
-              dataAdapter = _context.sent;
-
-              if (dataAdapter) {
-                _context.next = 6;
-                break;
-              }
-
-              throw new Error("Error getting subadapter");
-
-            case 6:
-              return _context.abrupt("return", dataAdapter.dataAdapter);
-
-            case 7:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee, this);
-    }));
-
-    function configure() {
-      return _configure.apply(this, arguments);
-    }
-
-    return configure;
-  }();
-
-  _proto.getRefNames = /*#__PURE__*/function () {
-    var _getRefNames = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2() {
-      var sequenceAdapter;
-      return runtime_1.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.next = 2;
-              return this.configure();
-
-            case 2:
-              sequenceAdapter = _context2.sent;
-              return _context2.abrupt("return", sequenceAdapter.getRefNames());
-
-            case 4:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2, this);
-    }));
-
-    function getRefNames() {
-      return _getRefNames.apply(this, arguments);
-    }
-
-    return getRefNames;
-  }();
-
-  _proto.getRegions = /*#__PURE__*/function () {
-    var _getRegions = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3() {
-      var sequenceAdapter;
-      return runtime_1.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.next = 2;
-              return this.configure();
-
-            case 2:
-              sequenceAdapter = _context3.sent;
-              return _context3.abrupt("return", sequenceAdapter.getRegions());
-
-            case 4:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3, this);
-    }));
-
-    function getRegions() {
-      return _getRegions.apply(this, arguments);
-    }
-
-    return getRegions;
-  }()
-  /**
-   * Fetch features for a certain region
-   * @param param -
-   * @returns Observable of Feature objects in the region
-   */
-  ;
-
-  _proto.getFeatures = function getFeatures(query, opts) {
-    var _this2 = this;
-
-    var windowSize = sanitizeWindowSize(configuration.readConfObject(this.config, ["windowSize"]));
-    var windowOverlap = sanitizeWindowOverlap(configuration.readConfObject(this.config, ["windowOverlap"]));
-    var windowDelta = windowSize * (windowOverlap / 100.0);
-
-    if (windowDelta == 0) {
-      windowDelta = windowSize;
-    }
-
-    var calcMode = configuration.readConfObject(this.config, ["calculationMode"]);
-    var regExpA = "[" + escapeRegExp(configuration.readConfObject(this.config, ["charactersA"])) + "]";
-    var regExpB = "[" + escapeRegExp(configuration.readConfObject(this.config, ["charactersB"])) + "]";
-    var regExpAll = "[" + escapeRegExp(configuration.readConfObject(this.config, ["charactersAll"])) + "]";
-    return rxjs.ObservableCreate( /*#__PURE__*/function () {
-      var _ref = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(observer) {
-        var sequenceAdapter, queryStart, queryEnd, ret, _yield$ret$pipe$toPro, feat, sequence, f, i, seq_chunk, n_regExpA, n_regExpB, len, score, new_simple_feat;
-
-        return runtime_1.wrap(function _callee4$(_context4) {
+        var sequenceAdapter, dataAdapter;
+        return runtime_1.wrap(function _callee$(_context) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context.prev = _context.next) {
               case 0:
-                _context4.next = 2;
-                return _this2.configure();
+                // instantiate the sequence adapter
+                sequenceAdapter = configuration.readConfObject(this.config, "sequenceAdapter");
+                _context.next = 3;
+                return (_this$getSubAdapter = this.getSubAdapter) === null || _this$getSubAdapter === void 0 ? void 0 : _this$getSubAdapter.call(this, sequenceAdapter);
 
-              case 2:
-                sequenceAdapter = _context4.sent;
-                queryStart = query.start, queryEnd = query.end; //Set the start/end one chunk before/after the current view
+              case 3:
+                dataAdapter = _context.sent;
 
-                queryStart = Math.max(0, queryStart - windowDelta);
-                queryEnd += windowDelta; //Quantize queryStart and queryEnd so the windowing behaves intuitively
-
-                queryStart = Math.floor(queryStart / windowDelta) * windowDelta;
-                queryEnd = Math.floor(queryEnd / windowDelta) * windowDelta;
-
-                if (!(queryEnd < 0 || queryStart > queryEnd)) {
-                  _context4.next = 11;
+                if (dataAdapter) {
+                  _context.next = 6;
                   break;
                 }
 
-                observer.complete();
-                return _context4.abrupt("return");
+                throw new Error("Error getting subadapter");
 
-              case 11:
-                ret = sequenceAdapter.getFeatures(_extends({}, query, {
-                  start: queryStart,
-                  end: queryEnd
-                }), opts);
-                _context4.next = 14;
-                return ret.pipe(operators.toArray()).toPromise();
+              case 6:
+                return _context.abrupt("return", dataAdapter.dataAdapter);
 
-              case 14:
-                _yield$ret$pipe$toPro = _context4.sent;
-                feat = _yield$ret$pipe$toPro[0];
-                sequence = feat.get("seq");
-                f = windowSize === 1;
-
-                for (i = 0; i < sequence.length; i += windowDelta) {
-                  seq_chunk = f ? sequence[i] : sequence.slice(i, i + windowSize);
-                  n_regExpA = count_regexp(seq_chunk, regExpA);
-                  n_regExpB = count_regexp(seq_chunk, regExpB);
-                  len = count_regexp(seq_chunk, regExpAll);
-                  score = 0;
-
-                  if (calcMode === "average") {
-                    score = (n_regExpA + n_regExpB) / (len || 1);
-                  } else if (calcMode === "skew") {
-                    score = (n_regExpA - n_regExpB) / (n_regExpA + n_regExpB || 1);
-                  }
-
-                  new_simple_feat = new SimpleFeature({
-                    uniqueId: _this2.id + "_" + (queryStart + i),
-                    start: queryStart + i,
-                    end: queryStart + i + windowDelta,
-                    score: score
-                  });
-                  observer.next(new_simple_feat);
-                }
-
-                observer.complete();
-
-              case 20:
+              case 7:
               case "end":
-                return _context4.stop();
+                return _context.stop();
             }
           }
-        }, _callee4);
+        }, _callee, this);
       }));
 
-      return function (_x) {
-        return _ref.apply(this, arguments);
-      };
-    }());
-  }
-  /**
-   * called to provide a hint that data tied to a certain region
-   * will not be needed for the forseeable future and can be purged
-   * from caches, etc
-   */
-  ;
+      function configure() {
+        return _configure.apply(this, arguments);
+      }
 
-  _proto.freeResources = function
-    /* { region } */
-  freeResources() {};
+      return configure;
+    }()
+  }, {
+    key: "getRefNames",
+    value: function () {
+      var _getRefNames = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee2() {
+        var sequenceAdapter;
+        return runtime_1.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return this.configure();
+
+              case 2:
+                sequenceAdapter = _context2.sent;
+                return _context2.abrupt("return", sequenceAdapter.getRefNames());
+
+              case 4:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function getRefNames() {
+        return _getRefNames.apply(this, arguments);
+      }
+
+      return getRefNames;
+    }()
+  }, {
+    key: "getRegions",
+    value: function () {
+      var _getRegions = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee3() {
+        var sequenceAdapter;
+        return runtime_1.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return this.configure();
+
+              case 2:
+                sequenceAdapter = _context3.sent;
+                return _context3.abrupt("return", sequenceAdapter.getRegions());
+
+              case 4:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this);
+      }));
+
+      function getRegions() {
+        return _getRegions.apply(this, arguments);
+      }
+
+      return getRegions;
+    }()
+    /**
+     * Fetch features for a certain region
+     * @param param -
+     * @returns Observable of Feature objects in the region
+     */
+
+  }, {
+    key: "getFeatures",
+    value: function getFeatures(query, opts) {
+      var _this2 = this;
+
+      var windowSize = sanitizeWindowSize(configuration.readConfObject(this.config, ["windowSize"]));
+      var windowOverlap = sanitizeWindowOverlap(configuration.readConfObject(this.config, ["windowOverlap"]));
+      var windowDelta = windowSize * (windowOverlap / 100.0);
+
+      if (windowDelta == 0) {
+        windowDelta = windowSize;
+      }
+
+      var calcMode = configuration.readConfObject(this.config, ["calculationMode"]);
+      var regExpA = "[" + escapeRegExp(configuration.readConfObject(this.config, ["charactersA"])) + "]";
+      var regExpB = "[" + escapeRegExp(configuration.readConfObject(this.config, ["charactersB"])) + "]";
+      var regExpAll = "[" + escapeRegExp(configuration.readConfObject(this.config, ["charactersAll"])) + "]";
+      return rxjs.ObservableCreate( /*#__PURE__*/function () {
+        var _ref = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee4(observer) {
+          var sequenceAdapter, queryStart, queryEnd, ret, _yield$ret$pipe$toPro, _yield$ret$pipe$toPro2, feat, sequence, f, i, seq_chunk, n_regExpA, n_regExpB, len, score, new_simple_feat;
+
+          return runtime_1.wrap(function _callee4$(_context4) {
+            while (1) {
+              switch (_context4.prev = _context4.next) {
+                case 0:
+                  _context4.next = 2;
+                  return _this2.configure();
+
+                case 2:
+                  sequenceAdapter = _context4.sent;
+                  queryStart = query.start, queryEnd = query.end; //Set the start/end one chunk before/after the current view
+
+                  queryStart = Math.max(0, queryStart - windowDelta);
+                  queryEnd += windowDelta; //Quantize queryStart and queryEnd so the windowing behaves intuitively
+
+                  queryStart = Math.floor(queryStart / windowDelta) * windowDelta;
+                  queryEnd = Math.floor(queryEnd / windowDelta) * windowDelta;
+
+                  if (!(queryEnd < 0 || queryStart > queryEnd)) {
+                    _context4.next = 11;
+                    break;
+                  }
+
+                  observer.complete();
+                  return _context4.abrupt("return");
+
+                case 11:
+                  ret = sequenceAdapter.getFeatures(_objectSpread2(_objectSpread2({}, query), {}, {
+                    start: queryStart,
+                    end: queryEnd
+                  }), opts);
+                  _context4.next = 14;
+                  return ret.pipe(operators.toArray()).toPromise();
+
+                case 14:
+                  _yield$ret$pipe$toPro = _context4.sent;
+                  _yield$ret$pipe$toPro2 = _slicedToArray(_yield$ret$pipe$toPro, 1);
+                  feat = _yield$ret$pipe$toPro2[0];
+                  sequence = feat.get("seq");
+                  f = windowSize === 1;
+
+                  for (i = 0; i < sequence.length; i += windowDelta) {
+                    seq_chunk = f ? sequence[i] : sequence.slice(i, i + windowSize);
+                    n_regExpA = count_regexp(seq_chunk, regExpA);
+                    n_regExpB = count_regexp(seq_chunk, regExpB);
+                    len = count_regexp(seq_chunk, regExpAll);
+                    score = 0;
+
+                    if (calcMode === "average") {
+                      score = (n_regExpA + n_regExpB) / (len || 1);
+                    } else if (calcMode === "skew") {
+                      score = (n_regExpA - n_regExpB) / (n_regExpA + n_regExpB || 1);
+                    }
+
+                    new_simple_feat = new SimpleFeature({
+                      uniqueId: "".concat(_this2.id, "_").concat(queryStart + i),
+                      start: queryStart + i,
+                      end: queryStart + i + windowDelta,
+                      score: score
+                    });
+                    observer.next(new_simple_feat);
+                  }
+
+                  observer.complete();
+
+                case 21:
+                case "end":
+                  return _context4.stop();
+              }
+            }
+          }, _callee4);
+        }));
+
+        return function (_x) {
+          return _ref.apply(this, arguments);
+        };
+      }());
+    }
+    /**
+     * called to provide a hint that data tied to a certain region
+     * will not be needed for the forseeable future and can be purged
+     * from caches, etc
+     */
+
+  }, {
+    key: "freeResources",
+    value: function
+      /* { region } */
+    freeResources() {}
+  }]);
 
   return default_1;
 }(BaseAdapter.BaseFeatureDataAdapter);
@@ -1183,7 +1384,6 @@ var NucContentAdapter = (function (pluginManager) {
   };
 });
 
-//Extends from LinearGenomeView so we can add menu items
 function configSchemaFactory(pluginManager) {
   var LGVPlugin = pluginManager.getPlugin("LinearGenomeViewPlugin");
   var baseLinearDisplayConfigSchema = LGVPlugin.exports.baseLinearDisplayConfigSchema;
@@ -1250,7 +1450,7 @@ function stateModelFactory(pluginManager, configSchema) {
             });
           }
         }];
-        return [].concat(superTrackMenuItems(), new_menu_items);
+        return [].concat(_toConsumableArray(superTrackMenuItems()), new_menu_items);
       }
     };
   });
@@ -1304,20 +1504,23 @@ function stateModelFactory(pluginManager, configSchema) {
     model.adapterConfig.windowSize = model.adapterConfig.windowSize || defaultWindowSize;
 
     var _useState = React.useState(model.adapterConfig.windowSize.toString()),
-        window_size = _useState[0],
-        set_window_size = _useState[1];
+        _useState2 = _slicedToArray(_useState, 2),
+        window_size = _useState2[0],
+        set_window_size = _useState2[1];
 
     model.adapterConfig.windowOverlap = model.adapterConfig.windowOverlap || defaultWindowOverlap;
 
-    var _useState2 = React.useState(model.adapterConfig.windowOverlap.toString()),
-        window_overlap = _useState2[0],
-        set_window_overlap = _useState2[1];
+    var _useState3 = React.useState(model.adapterConfig.windowOverlap.toString()),
+        _useState4 = _slicedToArray(_useState3, 2),
+        window_overlap = _useState4[0],
+        set_window_overlap = _useState4[1];
 
     model.adapterConfig.calculationMode = model.adapterConfig.calculationMode || defaultCalculationMode;
 
-    var _useState3 = React.useState(model.adapterConfig.calculationMode),
-        calculation_mode = _useState3[0],
-        set_calculation_mode = _useState3[1];
+    var _useState5 = React.useState(model.adapterConfig.calculationMode),
+        _useState6 = _slicedToArray(_useState5, 2),
+        calculation_mode = _useState6[0],
+        set_calculation_mode = _useState6[1];
 
     return React__default.createElement(Dialog, {
       open: true,
@@ -1418,49 +1621,54 @@ function stateModelFactory(pluginManager, configSchema) {
 }
 
 var NucContentPlugin = /*#__PURE__*/function (_Plugin) {
-  _inheritsLoose(NucContentPlugin, _Plugin);
+  _inherits(NucContentPlugin, _Plugin);
+
+  var _super = /*#__PURE__*/_createSuper(NucContentPlugin);
 
   function NucContentPlugin() {
     var _this;
 
-    _this = _Plugin.apply(this, arguments) || this;
+    _classCallCheck(this, NucContentPlugin);
+
+    _this = _super.apply(this, arguments);
     _this.name = "NucContentPlugin";
     return _this;
   }
 
-  var _proto = NucContentPlugin.prototype;
-
-  _proto.install = function install(pluginManager) {
-    pluginManager.addTrackType(function () {
-      var configSchema = configuration.ConfigurationSchema("NucContentTrack", {}, {
-        baseConfiguration: models.createBaseTrackConfig(pluginManager)
+  _createClass(NucContentPlugin, [{
+    key: "install",
+    value: function install(pluginManager) {
+      pluginManager.addTrackType(function () {
+        var configSchema = configuration.ConfigurationSchema("NucContentTrack", {}, {
+          baseConfiguration: models.createBaseTrackConfig(pluginManager)
+        });
+        return new TrackType({
+          name: "NucContentTrack",
+          configSchema: configSchema,
+          stateModel: models.createBaseTrackModel(pluginManager, "NucContentTrack", configSchema)
+        });
       });
-      return new TrackType({
-        name: "NucContentTrack",
-        configSchema: configSchema,
-        stateModel: models.createBaseTrackModel(pluginManager, "NucContentTrack", configSchema)
+      pluginManager.addAdapterType(function () {
+        return new AdapterType(_objectSpread2({
+          name: "NucContentAdapter"
+        }, pluginManager.load(NucContentAdapter)));
       });
-    });
-    pluginManager.addAdapterType(function () {
-      return new AdapterType(_extends({
-        name: "NucContentAdapter"
-      }, pluginManager.load(NucContentAdapter)));
-    });
-    var DisplayType = pluginManager.lib["@jbrowse/core/pluggableElementTypes/DisplayType"];
-    var WigglePlugin = pluginManager.getPlugin("WigglePlugin");
-    var LinearWiggleDisplayReactComponent = WigglePlugin.exports.LinearWiggleDisplayReactComponent;
-    pluginManager.addDisplayType(function () {
-      var configSchema = configSchemaFactory(pluginManager);
-      return new DisplayType({
-        name: "NucContentDisplay",
-        configSchema: configSchema,
-        stateModel: stateModelFactory(pluginManager, configSchema),
-        trackType: "NucContentTrack",
-        viewType: "LinearGenomeView",
-        ReactComponent: LinearWiggleDisplayReactComponent
+      var DisplayType = pluginManager.lib["@jbrowse/core/pluggableElementTypes/DisplayType"];
+      var WigglePlugin = pluginManager.getPlugin("WigglePlugin");
+      var LinearWiggleDisplayReactComponent = WigglePlugin.exports.LinearWiggleDisplayReactComponent;
+      pluginManager.addDisplayType(function () {
+        var configSchema = configSchemaFactory(pluginManager);
+        return new DisplayType({
+          name: "NucContentDisplay",
+          configSchema: configSchema,
+          stateModel: stateModelFactory(pluginManager, configSchema),
+          trackType: "NucContentTrack",
+          viewType: "LinearGenomeView",
+          ReactComponent: LinearWiggleDisplayReactComponent
+        });
       });
-    });
-  };
+    }
+  }]);
 
   return NucContentPlugin;
 }(Plugin);
