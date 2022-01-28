@@ -13,10 +13,8 @@
     "url": "https://github.com/jjrozewicki/jbrowse2-plugin-nuccontent.git"
   },
   "author": "John Rozewicki",
-  "distMain": "dist/index.js",
-  "srcMain": "src/index.ts",
-  "main": "src/index.ts",
-  "module": "",
+  "main": "dist/index.js",
+  "module": "dist/jbrowsepluginnuccontent.esm.js",
   "files": [
     "dist",
     "src"
@@ -26,19 +24,26 @@
     "build": "tsdx build --format cjs,esm,umd --name JBrowsePluginNucContent"
   },
   "devDependencies": {
-    "tsdx": "^0.14.1"
+    "@babel/preset-env": "^7.16.11",
+    "@jbrowse/core": "^1.4.4",
+    "@jbrowse/development-tools": "^1.0.3",
+    "@jbrowse/plugin-linear-genome-view": "^1.0.0",
+    "@jbrowse/plugin-wiggle": "^1.5.9",
+    "@types/react": "^17.0.0",
+    "mobx-state-tree": "3.14.1",
+    "react": "^16.8.0",
+    "rxjs": "^6.0.0"
   },
   "dependencies": {
-    "@jbrowse/cli": "^1.5.9",
-    "@jbrowse/core": "^1.5.9",
-    "@jbrowse/development-tools": "^1.5.9",
-    "@jbrowse/plugin-linear-genome-view": "^1.5.9",
+    "@material-ui/icons": "^4.11.2"
+  },
+  "peerDependencies": {
+    "@jbrowse/core": "^1.0.3",
+    "@jbrowse/plugin-linear-genome-view": "^1.0.0",
     "@jbrowse/plugin-wiggle": "^1.5.9",
-    "@types/react": "^17.0.37",
-    "mobx-state-tree": "^5.1.0",
-    "react": "^17.0.2",
-    "rollup-plugin-node-builtins": "^2.1.2",
-    "rollup-plugin-node-globals": "^1.4.0"
+    "mobx-state-tree": "3.14.1",
+    "react": "^16.8.0",
+    "rxjs": "^6.0.0"
   },
   "publishConfig": {
     "access": "public"
