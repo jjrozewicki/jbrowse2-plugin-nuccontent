@@ -2,7 +2,7 @@
   "plugins": [
     {
       "name": "NucContent",
-      "url": "dist/jbrowsepluginnuccontent.umd.development.js"
+      "url": "dist/jbrowsepluginnuccontent.umd.production.min.js"
     }
   ],
   "assemblies": [

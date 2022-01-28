@@ -1177,11 +1177,6 @@
     }
   }
 
-  var classCallCheck = {
-    __proto__: null,
-    'default': _classCallCheck$1
-  };
-
   function _defineProperties$1(target, props) {
     for (var i = 0; i < props.length; i++) {
       var descriptor = props[i];
@@ -1211,7 +1206,12 @@
     }, _typeof(obj);
   }
 
-  var require$$2 = getCjsExportFromNamespace(classCallCheck);
+  var _typeof$1 = {
+    __proto__: null,
+    'default': _typeof
+  };
+
+  var require$$4 = getCjsExportFromNamespace(_typeof$1);
 
   var simpleFeature = createCommonjsModule(function (module, exports) {
 
@@ -1225,11 +1225,11 @@
 
   var _objectSpread2 = _interopRequireDefault(_objectSpread2$1);
 
-  var _classCallCheck2 = _interopRequireDefault(require$$2);
+  var _classCallCheck2 = _interopRequireDefault(_classCallCheck$1);
 
   var _createClass2 = _interopRequireDefault(_createClass$1);
 
-  var _typeof2 = _interopRequireDefault(_typeof);
+  var _typeof2 = _interopRequireDefault(require$$4);
 
   /**
    * Abstract feature object

@@ -1,6 +1,6 @@
 {
   "name": "jbrowse2-plugin-nuccontent",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "JBrowse 2 statistics sequence adapter",
   "keywords": [
     "jbrowse",
