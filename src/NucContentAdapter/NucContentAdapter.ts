@@ -1,5 +1,6 @@
 import {
   BaseFeatureDataAdapter,
+  BaseSequenceAdapter,
   BaseOptions
 } from "@jbrowse/core/data_adapters/BaseAdapter";
 import { AnyConfigurationModel } from "@jbrowse/core/configuration/configurationSchema";
@@ -28,7 +29,7 @@ function escapeRegExp(str: string) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 }
 
-export default class extends BaseFeatureDataAdapter {
+export default class extends BaseSequenceAdapter {
   config: AnyConfigurationModel;
 
   getSubAdapter?: getSubAdapterType;

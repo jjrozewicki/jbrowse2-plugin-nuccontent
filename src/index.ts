@@ -7,6 +7,8 @@ import {
   createBaseTrackModel
 } from "@jbrowse/core/pluggableElementTypes/models";
 import { ConfigurationSchema } from "@jbrowse/core/configuration";
+import { FileLocation } from '@jbrowse/core/util/types'
+import { AdapterGuesser, TrackTypeGuesser } from "@jbrowse/core/util/tracks";
 
 import NucContentAdapter from "./NucContentAdapter";
 import {
@@ -42,6 +44,39 @@ export default class NucContentPlugin extends Plugin {
           ...pluginManager.load(NucContentAdapter)
         })
     );
+
+    pluginManager.addToExtensionPoint(
+      'Core-guessAdapterForLocation',
+      (adapterGuesser: AdapterGuesser) => {
+        return (
+          file: FileLocation,
+          index?: FileLocation,
+          adapterHint?: string,
+        ) => {
+          const adapterName = 'NucContentAdapter'
+
+          if (adapterHint === adapterName) {
+            return {
+              type: adapterName,
+              ieqLocation: file,
+            }
+          }
+          return adapterGuesser(file, index, adapterHint)
+        }
+      },
+    )
+
+    pluginManager.addToExtensionPoint(
+      'Core-guessTrackTypeForLocation',
+      (trackTypeGuesser: TrackTypeGuesser) => {
+        return (adapterName: string) => {
+          if (adapterName === 'NucContentAdapter') {
+            return 'NucContentTrack'
+          }
+          return trackTypeGuesser(adapterName)
+        }
+      },
+    )
 
     const DisplayType =
       pluginManager.lib["@jbrowse/core/pluggableElementTypes/DisplayType"];

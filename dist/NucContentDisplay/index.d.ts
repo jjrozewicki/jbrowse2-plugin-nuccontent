@@ -54,6 +54,7 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
         beforeDestroy(): void;
     }, import("mobx-state-tree")._NotCustomized, import("mobx-state-tree")._NotCustomized>>;
     userBpPerPxLimit: import("mobx-state-tree").IMaybe<import("mobx-state-tree").ISimpleType<number>>;
+    userByteSizeLimit: import("mobx-state-tree").IMaybe<import("mobx-state-tree").ISimpleType<number>>;
 } & {
     type: import("mobx-state-tree").ISimpleType<"LinearWiggleDisplay">;
     configuration: import("mobx-state-tree").ITypeUnion<any, any, any>;
@@ -61,6 +62,8 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
     resolution: import("mobx-state-tree").IOptionalIType<import("mobx-state-tree").ISimpleType<number>, [undefined]>;
     fill: import("mobx-state-tree").IMaybe<import("mobx-state-tree").ISimpleType<boolean>>;
     color: import("mobx-state-tree").IMaybe<import("mobx-state-tree").ISimpleType<string>>;
+    posColor: import("mobx-state-tree").IMaybe<import("mobx-state-tree").ISimpleType<string>>;
+    negColor: import("mobx-state-tree").IMaybe<import("mobx-state-tree").ISimpleType<string>>;
     summaryScoreMode: import("mobx-state-tree").IMaybe<import("mobx-state-tree").ISimpleType<string>>;
     rendererTypeNameState: import("mobx-state-tree").IMaybe<import("mobx-state-tree").ISimpleType<string>>;
     scale: import("mobx-state-tree").IMaybe<import("mobx-state-tree").ISimpleType<string>>;
@@ -125,15 +128,17 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
     setRpcDriverName(rpcDriverName: string): void;
     reload(): void;
 } & {
+    currBpPerPx: number;
     message: string;
     featureIdUnderMouse: string | undefined;
     contextMenuFeature: import("@jbrowse/core/util/simpleFeature").Feature | undefined;
     scrollTop: number;
+    estimatedRegionStatsP: Promise<import("@jbrowse/core/data_adapters/BaseAdapter").Stats> | undefined;
+    estimatedRegionStats: import("@jbrowse/core/data_adapters/BaseAdapter").Stats | undefined;
 } & {
     readonly blockType: "staticBlocks" | "dynamicBlocks";
     readonly blockDefinitions: import("@jbrowse/core/util/blockTypes").BlockSet;
 } & {
-    readonly maxViewBpPerPx: any;
     readonly renderDelay: number;
     readonly TooltipComponent: React.FC<any>;
     readonly selectedFeatureId: string | undefined;
@@ -144,14 +149,28 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
     getFeatureOverlapping(blockKey: string, x: number, y: number): any;
     getFeatureByID(blockKey: string, id: string): [number, number, number, number] | undefined;
     searchFeatureByID(id: string): [number, number, number, number] | undefined;
+    readonly currentBytesRequested: number;
+    readonly currentFeatureScreenDensity: number;
+    readonly maxFeatureScreenDensity: any;
+    readonly estimatedStatsReady: boolean;
+    readonly maxAllowableBytes: number;
 } & {
+    setMessage(message: string): void;
     afterAttach(): void;
+    estimateRegionsStats(regions: import("@jbrowse/core/util").Region[], opts: {
+        headers?: Record<string, string> | undefined;
+        signal?: AbortSignal | undefined;
+        filters?: string[] | undefined;
+    }): Promise<import("@jbrowse/core/data_adapters/BaseAdapter").Stats>;
+    setRegionStatsP(p?: Promise<import("@jbrowse/core/data_adapters/BaseAdapter").Stats> | undefined): void;
+    setRegionStats(estimatedRegionStats?: import("@jbrowse/core/data_adapters/BaseAdapter").Stats | undefined): void;
+    clearRegionStats(): void;
     setHeight(displayHeight: number): number;
     resizeHeight(distance: number): number;
     setScrollTop(scrollTop: number): void;
-    setUserBpPerPxLimit(limit: number): void;
-    setMessage(message: string): void;
+    updateStatsLimit(stats: import("@jbrowse/core/data_adapters/BaseAdapter").Stats): void;
     addBlock(key: string, block: import("@jbrowse/core/util/blockTypes").BaseBlock): void;
+    setCurrBpPerPx(n: number): void;
     deleteBlock(key: string): void;
     selectFeature(feature: import("@jbrowse/core/util/simpleFeature").Feature): void;
     clearFeatureSelection(): void;
@@ -159,7 +178,13 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
     reload(): void;
     setContextMenuFeature(feature?: import("@jbrowse/core/util/simpleFeature").Feature | undefined): void;
 } & {
-    regionCannotBeRenderedText(_region: import("@jbrowse/core/util").Region): "" | "Zoom in to see features";
+    readonly regionTooLarge: boolean;
+    readonly regionTooLargeReason: string;
+} & {
+    reload(): Promise<void>;
+    afterAttach(): void;
+} & {
+    regionCannotBeRenderedText(_region: import("@jbrowse/core/util").Region): "" | "Force load to see features";
     regionCannotBeRendered(_region: import("@jbrowse/core/util").Region): JSX.Element | undefined;
     trackMenuItems(): import("@jbrowse/core/ui").MenuItem[];
     contextMenuItems(): {
@@ -173,7 +198,7 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
         overrideHeight: number;
     }): Promise<JSX.Element>;
 } & {
-    ready: boolean;
+    statsReady: boolean;
     message: string | undefined;
     stats: any;
     statsFetchInProgress: AbortController | undefined;
@@ -183,6 +208,8 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
         scoreMax: number;
     }): void;
     setColor(color: string): void;
+    setPosColor(color: string): void;
+    setNegColor(color: string): void;
     setLoading(aborter: AbortController): void;
     selectFeature(feature: import("@jbrowse/core/util/simpleFeature").Feature): void;
     setResolution(res: number): void;
@@ -202,11 +229,12 @@ export declare function stateModelFactory(pluginManager: PluginManager, configSc
     readonly rendererTypeName: string;
     readonly filters: undefined;
     readonly scaleType: any;
-    readonly filled: any;
     readonly maxScore: any;
     readonly minScore: any;
+} & {
     readonly rendererConfig: any;
 } & {
+    readonly filled: any;
     readonly summaryScoreModeSetting: any;
     readonly domain: number[];
     readonly needsScalebar: boolean;

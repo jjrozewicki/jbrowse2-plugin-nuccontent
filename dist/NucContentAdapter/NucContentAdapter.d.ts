@@ -1,9 +1,9 @@
-import { BaseFeatureDataAdapter, BaseOptions } from "@jbrowse/core/data_adapters/BaseAdapter";
+import { BaseFeatureDataAdapter, BaseSequenceAdapter, BaseOptions } from "@jbrowse/core/data_adapters/BaseAdapter";
 import { AnyConfigurationModel } from "@jbrowse/core/configuration/configurationSchema";
 import { getSubAdapterType } from "@jbrowse/core/data_adapters/dataAdapterCache";
 import { Region, NoAssemblyRegion } from "@jbrowse/core/util/types";
 import { Feature } from "@jbrowse/core/util/simpleFeature";
-export default class extends BaseFeatureDataAdapter {
+export default class extends BaseSequenceAdapter {
     config: AnyConfigurationModel;
     getSubAdapter?: getSubAdapterType;
     static capabilities: string[];

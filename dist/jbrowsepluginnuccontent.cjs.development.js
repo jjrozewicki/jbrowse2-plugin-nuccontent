@@ -1137,8 +1137,8 @@ function escapeRegExp(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 }
 
-var default_1 = /*#__PURE__*/function (_BaseFeatureDataAdapt) {
-  _inherits(default_1, _BaseFeatureDataAdapt);
+var default_1 = /*#__PURE__*/function (_BaseSequenceAdapter) {
+  _inherits(default_1, _BaseSequenceAdapter);
 
   var _super = /*#__PURE__*/_createSuper(default_1);
 
@@ -1374,7 +1374,7 @@ var default_1 = /*#__PURE__*/function (_BaseFeatureDataAdapt) {
   }]);
 
   return default_1;
-}(BaseAdapter.BaseFeatureDataAdapter);
+}(BaseAdapter.BaseSequenceAdapter);
 default_1.capabilities = ["hasLocalStats"];
 
 var NucContentAdapter = (function (pluginManager) {
@@ -1652,6 +1652,29 @@ var NucContentPlugin = /*#__PURE__*/function (_Plugin) {
         return new AdapterType(_objectSpread2({
           name: "NucContentAdapter"
         }, pluginManager.load(NucContentAdapter)));
+      });
+      pluginManager.addToExtensionPoint('Core-guessAdapterForLocation', function (adapterGuesser) {
+        return function (file, index, adapterHint) {
+          var adapterName = 'NucContentAdapter';
+
+          if (adapterHint === adapterName) {
+            return {
+              type: adapterName,
+              ieqLocation: file
+            };
+          }
+
+          return adapterGuesser(file, index, adapterHint);
+        };
+      });
+      pluginManager.addToExtensionPoint('Core-guessTrackTypeForLocation', function (trackTypeGuesser) {
+        return function (adapterName) {
+          if (adapterName === 'NucContentAdapter') {
+            return 'NucContentTrack';
+          }
+
+          return trackTypeGuesser(adapterName);
+        };
       });
       var DisplayType = pluginManager.lib["@jbrowse/core/pluggableElementTypes/DisplayType"];
       var WigglePlugin = pluginManager.getPlugin("WigglePlugin");
